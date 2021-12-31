@@ -1,16 +1,16 @@
-#include <curl/curl.h>
 #include <stdbool.h>
+#include "request.h"
 
 #ifndef _EDUPAGE_H
 #define _EDUPAGE_H
 
 typedef struct Edupage {
-    CURL *curl;
+    HTTPRequestImpl* req;
     bool is_logged_in;
 } Edupage;
 
 
-void edupage_init(Edupage* edupage);
+Edupage edupage_init(HTTPRequestImpl *impl);
 int edupage_login(Edupage* edupage);
 
 #endif
