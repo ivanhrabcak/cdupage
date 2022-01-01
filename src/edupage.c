@@ -84,11 +84,10 @@ int edupage_login(Edupage* edupage, char* subdomain, char* username, char* passw
 
     free(csrf_token);
 
-    // we can hardcode the json instead of generating it, this won't waste out sweet memory
+    // we can hardcode the json instead of generating it, this won't waste our memory
     // this has a disadvantage - it is pretty dangerous as there is little padding in the
-    // parameters pointer (to not waste sweet memory)
-    // it is allocated with malloc so it can be freed asap 
-    char* parameters = malloc(512 * sizeof(char));
+    // parameters string (to not waste memory)
+    char parameters[512];
     sprintf(parameters, "{\"username\":\"%s\",\"password\":\"%s\", \"csrfauth\":\"%s\"}", username, password, csrf_token);
 
     sprintf(url, "https://%s.edupage.org/login/edubarLogin.php", subdomain);
@@ -109,7 +108,5 @@ int edupage_login(Edupage* edupage, char* subdomain, char* username, char* passw
     
 
     response_code = http_post(req, url, &headers, parameters, &test_streamfunc);
-    
-    free(parameters);
     
 }
