@@ -7,8 +7,6 @@
 #include <curl/curl.h>
 #include <string.h>
 
-#define len(x) sizeof(x) / sizeof(x[0])
-
 size_t write_function(void* ptr, size_t size, size_t nmemb, ResponseStream* data) {
     data->stream_part = ptr;
     data->next(*data);
@@ -16,15 +14,15 @@ size_t write_function(void* ptr, size_t size, size_t nmemb, ResponseStream* data
     return size * nmemb;
 }
 
-int curl_get(HTTPRequestImpl* req, char* url, HTTPHeader* headers, void (*streamfunc)(ResponseStream)) {
+int curl_get(HTTPRequestImpl* req, char* url, HTTPHeaders* headers, void (*streamfunc)(ResponseStream)) {
     CURL* curl = (CURL*) req->http_client;
 
     curl_easy_setopt(curl, CURLOPT_URL, url);
 
     if (headers != NULL) {
         struct curl_slist* header_list = NULL;
-        for (int i = 0; i < len(headers); i++) {
-            HTTPHeader currentHeader = headers[i];
+        for (int i = 0; i < headers->len; i++) {
+            HTTPHeader currentHeader = headers->headers[i];
 
             // we need to account for the :, the space and \0 at the end of the string
             char header_string[strlen(currentHeader.key) + strlen(currentHeader.value) + 3];
@@ -44,6 +42,8 @@ int curl_get(HTTPRequestImpl* req, char* url, HTTPHeader* headers, void (*stream
 
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_function);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &stream);
+
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 
     CURLcode err = curl_easy_perform(curl);
     if (!err) {
@@ -59,28 +59,8 @@ int curl_get(HTTPRequestImpl* req, char* url, HTTPHeader* headers, void (*stream
     
 }
 
-int curl_post(HTTPRequestImpl* req, char* url, HTTPHeader* headers, char* post_data, void (*streamfunc)(ResponseStream)) {
+int curl_post(HTTPRequestImpl* req, char* url, HTTPHeaders* headers, char* post_data, void (*streamfunc)(ResponseStream)) {
     CURL* curl = (CURL*) req->http_client;
-
-    curl_easy_setopt(curl, CURLOPT_URL, url);
-
-    if (headers != NULL) {
-        struct curl_slist* header_list = NULL;
-        for (int i = 0; i < len(headers); i++) {
-            HTTPHeader currentHeader = headers[i];
-
-            // we need to account for the :, the space and \0 at the end of the string
-            char header_string[strlen(currentHeader.key) + strlen(currentHeader.value) + 3];
-
-            // key: value
-            sprintf(header_string, "%s: %s", currentHeader.key, currentHeader.value);
-            
-            header_list = curl_slist_append(header_list, header_string);
-        }
-
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header_list);
-    }
-    
 
     ResponseStream stream;
     stream.next = streamfunc;
@@ -88,7 +68,27 @@ int curl_post(HTTPRequestImpl* req, char* url, HTTPHeader* headers, char* post_d
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_function);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &stream);
 
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, strlen(post_data));
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data);
+
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+    curl_easy_setopt(curl, CURLOPT_URL, url);
+    if (headers != NULL) {
+        struct curl_slist* header_list = NULL;
+        for (int i = 0; i < headers->len; i++) {
+            HTTPHeader currentHeader = headers->headers[i];
+
+            // we need to account for the :, the space and \0 at the end of the string
+            char header_string[strlen(currentHeader.key) + strlen(currentHeader.value) + 3];
+
+            // key: value
+            sprintf(header_string, "%s: %s", currentHeader.key, currentHeader.value);
+
+            header_list = curl_slist_append(header_list, header_string);
+        }
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, header_list);
+    }
 
     CURLcode err = curl_easy_perform(curl);
     if (!err) {
