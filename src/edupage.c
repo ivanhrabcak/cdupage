@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdarg.h>
 
 #include "edupage.h"
 #include "request.h"
@@ -42,12 +43,29 @@ int get_substring_pos(char* needle, char* haystack) {
     return needle_ind ? needle_position + needle_ind : -1;
 }
 
+/**
+ * @brief Dynamicly allocates memory for string to be formatted.
+ * @param format Format string followed by optional format specifiers.
+ * @return Formatted string.
+ **/
+char* dsprintf(char* format, ...) {
+	va_list args;
+	va_start(args, format);
+
+	int len = vsnprintf(NULL, 0, format, args);
+	char* str = malloc(len + 1);
+	vsnprintf(str, len + 1, format, args);
+
+	va_end(args);
+
+	return str;
+}
+
 // returns -1 on error
 int edupage_login(Edupage* edupage, char* subdomain, char* username, char* password) {
     HTTPRequestImpl* req = edupage->req;
 
-    char url[50];
-    sprintf(url, "https://%s.edupage.org/login/index.php", subdomain);
+	char* url = dsprintf("https://%s.edupage.org/login/index.php", subdomain);
 
     // the csrf token is 72 characters + \0 at the end;
     // allocated with malloc to free asap
@@ -77,14 +95,11 @@ int edupage_login(Edupage* edupage, char* subdomain, char* username, char* passw
     }
 
     free(csrf_token);
+	free(url);
 
-    // we can hardcode the json instead of generating it, this won't waste our memory
-    // this has a disadvantage - it is pretty dangerous as there is little padding in the
-    // parameters string (to not waste memory)
-    char parameters[512];
-    sprintf(parameters, "{\"username\":\"%s\",\"password\":\"%s\", \"csrfauth\":\"%s\"}", username, password, csrf_token);
 
-    sprintf(url, "https://%s.edupage.org/login/edubarLogin.php", subdomain);
+	char* parameters = dsprintf("{\"username\":\"%s\",\"password\":\"%s\", \"csrfauth\":\"%s\"}", username, password, csrf_token);
+	url = dsprintf("https://%s.edupage.org/login/edubarLogin.php", subdomain);
 
     HTTPHeader raw_headers[1];
     raw_headers[0] = http_create_header("Content-Type", "application/json");
@@ -103,4 +118,5 @@ int edupage_login(Edupage* edupage, char* subdomain, char* username, char* passw
 
     response_code = http_post(req, url, &headers, parameters, &test_streamfunc);
     
+	free(url);
 }
