@@ -49,23 +49,23 @@ int get_substring_pos(char* needle, char* haystack) {
  * @return Formatted string.
  **/
 char* dsprintf(char* format, ...) {
-	va_list args;
-	va_start(args, format);
+    va_list args;
+    va_start(args, format);
 
-	int len = vsnprintf(NULL, 0, format, args);
-	char* str = malloc(len + 1);
-	vsnprintf(str, len + 1, format, args);
+    int len = vsnprintf(NULL, 0, format, args);
+    char* str = malloc(len + 1);
+    vsnprintf(str, len + 1, format, args);
 
-	va_end(args);
+    va_end(args);
 
-	return str;
+    return str;
 }
 
 // returns -1 on error
 int edupage_login(Edupage* edupage, char* subdomain, char* username, char* password) {
     HTTPRequestImpl* req = edupage->req;
 
-	char* url = dsprintf("https://%s.edupage.org/login/index.php", subdomain);
+    char* url = dsprintf("https://%s.edupage.org/login/index.php", subdomain);
 
     // the csrf token is 72 characters + \0 at the end;
     // allocated with malloc to free asap
@@ -95,11 +95,11 @@ int edupage_login(Edupage* edupage, char* subdomain, char* username, char* passw
     }
 
     free(csrf_token);
-	free(url);
+    free(url);
 
 
-	char* parameters = dsprintf("{\"username\":\"%s\",\"password\":\"%s\", \"csrfauth\":\"%s\"}", username, password, csrf_token);
-	url = dsprintf("https://%s.edupage.org/login/edubarLogin.php", subdomain);
+    char* parameters = dsprintf("{\"username\":\"%s\",\"password\":\"%s\", \"csrfauth\":\"%s\"}", username, password, csrf_token);
+    url = dsprintf("https://%s.edupage.org/login/edubarLogin.php", subdomain);
 
     HTTPHeader raw_headers[1];
     raw_headers[0] = http_create_header("Content-Type", "application/json");
@@ -118,5 +118,5 @@ int edupage_login(Edupage* edupage, char* subdomain, char* username, char* passw
 
     response_code = http_post(req, url, &headers, parameters, &test_streamfunc);
     
-	free(url);
+    free(url);
 }
