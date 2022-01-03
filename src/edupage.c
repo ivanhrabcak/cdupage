@@ -36,16 +36,16 @@ int get_substring_pos(char* needle, char* haystack) {
 
     while(current_char = haystack[++i]) {
         if(current_char == needle[needle_ind] || current_char == needle[needle_ind = 0]) {
-			if(needle_ind && backtrack_ind == -1 && current_char == needle[0]) backtrack_ind = i;
-			if(!needle_ind++) needle_position = i;
-			if(!needle[needle_ind]) break;
-		} else if(i >= backtrack_ind && backtrack_ind != -1) {
-			i = backtrack_ind - 1;
-			backtrack_ind = -1;
-		}
+            if(needle_ind && backtrack_ind == -1 && current_char == needle[0]) backtrack_ind = i;
+            if(!needle_ind++) needle_position = i;
+            if(!needle[needle_ind]) break;
+        } else if(i >= backtrack_ind && backtrack_ind != -1) {
+            i = backtrack_ind - 1;
+            backtrack_ind = -1;
+        }
     }
 
-    return needle_ind ? needle_position + needle_ind : -1;
+    return needle_ind && !needle[needle_ind] ? needle_position + needle_ind : -1;
 }
 
 /**
