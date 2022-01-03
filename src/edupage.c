@@ -24,28 +24,22 @@ Edupage edupage_init(HTTPRequestImpl* impl) {
 //     return -1;
 // }
 int get_substring_pos(char* needle, char* haystack) {
+    if(!haystack[0] && needle[0]) return -1;
+    if(!needle[0]) return 0;
+
     int needle_position = -1;
-
-    int needle_len = strlen(needle);
     int needle_ind = 0;
+    int i = -1;
+    char current_char;
 
-    for (int i = 0; i < strlen(haystack); i++) {
-        char current_char = haystack[i];
-
-        if (current_char == needle[needle_ind]) {
-            needle_ind++;
-
-            if (needle_ind == needle_len) {
-                needle_position = i;
-                break;
-            }
-        }
-        else {
-            needle_ind = 0;
+    while(current_char = haystack[++i]) {
+        if(current_char == needle[needle_ind] || current_char == needle[needle_ind = 0]) {
+            if(!needle_ind++) needle_position = i;
+            if(!needle[needle_ind]) break;
         }
     }
 
-    return needle_position;
+    return needle_ind ? needle_position + needle_ind : -1;
 }
 
 // returns -1 on error
