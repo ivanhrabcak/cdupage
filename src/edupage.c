@@ -2,10 +2,10 @@
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdarg.h>
 
 #include "edupage.h"
 #include "request.h"
+#include "util.h"
 
 const char* NO_CSRF_TOKEN = "000000000000000000000000000000000000000000000000000000000000000000000000";
 
@@ -15,55 +15,6 @@ Edupage edupage_init(HTTPRequestImpl* impl) {
     e.is_logged_in = false;
 
     return e;
-}
-
-// pseudocode of this function will explain it the best:
-// if (haystack.contains(needle)) {
-//     return haystack.indexOf(needle) + needle.length - 1;
-// }
-// else {
-//     return -1;
-// }
-int get_substring_pos(char* needle, char* haystack) {
-    if(!haystack[0] && needle[0]) return -1;
-    if(!needle[0]) return 0;
-
-    int needle_position = -1;
-    int needle_ind = 0;
-    int backtrack_ind = -1;
-    int i = -1;
-    char current_char;
-
-    while(current_char = haystack[++i]) {
-        if(current_char == needle[needle_ind] || current_char == needle[needle_ind = 0]) {
-			if(needle_ind && backtrack_ind == -1 && current_char == needle[0]) backtrack_ind = i;
-			if(!needle_ind++) needle_position = i;
-			if(!needle[needle_ind]) break;
-		} else if(i >= backtrack_ind && backtrack_ind != -1) {
-			i = backtrack_ind - 1;
-			backtrack_ind = -1;
-		}
-    }
-
-    return needle_ind ? needle_position + needle_ind : -1;
-}
-
-/**
- * @brief Dynamicly allocates memory for string to be formatted.
- * @param format Format string followed by optional format specifiers.
- * @return Formatted string.
- **/
-char* dsprintf(char* format, ...) {
-    va_list args;
-    va_start(args, format);
-
-    int len = vsnprintf(NULL, 0, format, args);
-    char* str = malloc(len + 1);
-    vsnprintf(str, len + 1, format, args);
-
-    va_end(args);
-
-    return str;
 }
 
 // returns -1 on error

@@ -25,17 +25,11 @@ target_include_directories(cdupage
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
-# set_target_properties(cdupage
-#     PROPERTIES
-#     PUBLIC_HEADER ${cdupage_HEADERS})
 install(FILES ${cdupage_HEADERS} DESTINATION include/cdupage)
 include(GNUInstallDirs)
-
-set(INSTALL_CONFIGDIR ${CMAKE_INSTALL_LIBDIR}/cmake/MiniSat)
 
 install(
     TARGETS
         cdupage
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    PUBLIC_HEADER DESTINATION include
 )

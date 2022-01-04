@@ -10,7 +10,6 @@ typedef struct Edupage {
     char* PHPSESSID;
 } Edupage;
 
-
 Edupage edupage_init(HTTPRequestImpl *impl);
 int edupage_login(Edupage* edupage, char* subdomain, char* username, char* password);
 
