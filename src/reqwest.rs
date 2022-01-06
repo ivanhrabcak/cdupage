@@ -5,7 +5,7 @@ use reqwest::header::{HeaderValue, HeaderMap};
 use crate::{Cache, HTTPClient, Response};
 
 pub struct InMemoryCache<T> {
-    cache: HashMap<&'static str, T>
+    pub(crate) cache: HashMap<&'static str, T>
 }
 
 impl<T> Cache<T> for InMemoryCache<T> {
@@ -18,7 +18,7 @@ impl<T> Cache<T> for InMemoryCache<T> {
     }
 }
 
-struct ReqwestHTTPClient {
+pub struct ReqwestHTTPClient {
     client: reqwest::blocking::Client
 }
 
@@ -50,10 +50,12 @@ impl HTTPClient for ReqwestHTTPClient {
                 }
                 let cache_key = url;
 
+                let response_code = r.status().as_u16();
                 let response_text = r.text();
                 if let Ok(text) = response_text {
                     cache.store(cache_key, text);
-                    Ok(Response { cache_key, headers })
+                    
+                    Ok(Response { cache_key, headers, response_code})
                 }
                 else {
                     Err("Failed to get response text".to_string())
@@ -87,10 +89,12 @@ impl HTTPClient for ReqwestHTTPClient {
                 }
                 let cache_key = url;
 
+                let response_code = r.status().as_u16();
                 let response_text = r.text();
                 if let Ok(text) = response_text {
                     cache.store(cache_key, text);
-                    Ok(Response { cache_key, headers })
+                    
+                    Ok(Response { cache_key, headers, response_code })
                 }
                 else {
                     Err("Failed to get response text".to_string())
