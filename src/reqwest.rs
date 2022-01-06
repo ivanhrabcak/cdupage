@@ -1,7 +1,5 @@
 use std::{collections::HashMap};
 
-use reqwest::header::{HeaderValue, HeaderMap};
-
 use crate::{Cache, HTTPClient, Response};
 
 pub struct InMemoryCache<T> {
