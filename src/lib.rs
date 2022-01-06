@@ -3,8 +3,9 @@ use std::collections::HashMap;
 
 #[cfg_attr(any(unix, windows), path = "reqwest.rs")]
 pub mod implementation;
-
+pub mod edupage_types;
 pub mod edupage;
+pub mod edupage_deserializers;
 
 pub trait Cache<T> {
     fn store(&mut self, key: &String, val: T);
