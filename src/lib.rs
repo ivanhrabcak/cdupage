@@ -3,10 +3,14 @@
 pub mod edupage_types;
 pub mod edupage;
 pub mod edupage_deserializers;
+pub mod edupage_traits;
+pub mod trait_implementations;
 
 #[cfg(test)]
 mod tests {
     use std::assert_matches::assert_matches;
+
+    use crate::edupage_traits::Login;
 
     fn get_env_var(name: &'static str) -> Option<String> {
         use std::env;
