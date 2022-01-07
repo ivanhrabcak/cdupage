@@ -5,6 +5,12 @@ use serde_aux::prelude::*;
 
 use crate::edupage_deserializers::*;
 
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+pub enum Gender {
+    Male,
+    Female
+}
+
 #[derive(Serialize, Deserialize, Debug, IntoPrimitive, TryFromPrimitive, Clone, Copy)]
 #[repr(usize)]
 pub enum TimelineItemType {
@@ -96,3 +102,25 @@ pub struct UserData {
     pub items: Vec<TimelineItem>,
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Teacher {
+    #[serde(deserialize_with = "deserialize_number_from_string")]
+    pub id: i64,
+
+    #[serde(rename = "firstname")]
+    pub first_name: String,
+
+    #[serde(rename = "lastname")]
+    pub last_name: String,
+
+    pub short: String,
+
+    #[serde(with = "gender")]
+    pub gender: Gender,
+
+    #[serde(rename = "classroomid", deserialize_with = "deserialize_number_from_string")]
+    pub classroom_id: i64,
+
+    #[serde(rename = "isOut")]
+    pub is_out: bool
+}

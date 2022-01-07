@@ -70,6 +70,42 @@ pub mod timeline_item_type {
     }
 }
 
+
+pub mod gender {
+    use serde::{self, Deserialize, Serializer, Deserializer};
+
+    use crate::edupage_types::Gender;
+
+    pub fn serialize<S>(
+        gender: &Gender,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(match gender {
+            &Gender::Male => "M",
+            &Gender::Female => "F"
+        })
+    }
+
+    pub fn deserialize<'de, D>(
+        deserializer: D,
+    ) -> Result<Gender, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let s: &str = &String::deserialize(deserializer)?.to_lowercase();
+        
+        match s {
+            "m" => Ok(Gender::Male),
+            "f" => Ok(Gender::Female),
+            _ => 
+                Err(serde::de::Error::custom(format!("Failed to deserialize gender: {}", s)))
+        }
+    }
+}
+
 fn get_string_representation(item_type: &UserID) -> String {
     match item_type {
         UserID::Teacher(id) => format!("Ucitel{}", id),
