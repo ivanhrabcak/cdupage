@@ -123,7 +123,16 @@ pub struct DBI {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct UserData {
     pub items: Vec<TimelineItem>,
-    pub dbi: DBI
+    pub dbi: DBI,
+
+    #[serde(rename = "meninyDnes")]
+    pub nameday_today: String,
+
+    #[serde(rename = "meninyZajtra")]
+    pub nameday_tomorrow: String,
+
+    #[serde(rename = "userid", with = "user_id")]
+    pub user_id: UserID
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
