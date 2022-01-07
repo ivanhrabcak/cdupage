@@ -102,7 +102,22 @@ pub struct DBI {
     pub teachers: Vec<Teacher>,
 
     #[serde(with = "dbi_item")]
-    pub classes: Vec<Class>
+    pub classes: Vec<Class>,
+
+    #[serde(with = "dbi_item")]
+    pub subjects: Vec<DBIBase>,
+
+    #[serde(with = "dbi_item")]
+    pub classrooms: Vec<DBIBase>,
+
+    #[serde(with = "dbi_item")]
+    pub students: Vec<Student>,
+
+    #[serde(with = "dbi_item")]
+    pub parents: Vec<Parents>,
+
+    #[serde(rename = "jeZUS")]
+    pub is_art_school: bool
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -152,11 +167,74 @@ pub struct Class {
     pub grade: Option<i64>,
 
     #[serde(rename = "teacherid", with = "string_i64_option")]
-    pub teacher_id: Option<i64>,
+    pub first_teacher_id: Option<i64>,
 
     #[serde(rename = "teacher2id", with = "string_i64_option")]
     pub second_teacher_id: Option<i64>,
 
     #[serde(rename = "classroomid", with = "string_i64_option")]
-    pub classroom_id: Option<i64>,
+    pub classroom_id: Option<i64>
+}
+
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Student {
+    #[serde(with = "string_i64_option")]
+    pub id: Option<i64>,
+
+    #[serde(rename = "classid", with = "string_i64_option")]
+    pub class_id: Option<i64>,
+
+    #[serde(rename = "firstname")]
+    pub first_name: String,
+
+    #[serde(rename = "lastname")]
+    pub last_name: String,
+
+    #[serde(rename = "parent1id", with = "string_i64_option")]
+    pub first_parent_id: Option<i64>,
+
+    #[serde(rename = "parent2id", with = "string_i64_option")]
+    pub second_parent_id: Option<i64>,
+
+    #[serde(rename = "parent3id", with = "string_i64_option")]
+    pub third_parent_id: Option<i64>, // what the fuck
+
+    #[serde(with = "gender_option")]
+    pub gender: Option<Gender>,
+
+    #[serde(rename = "datefrom", with = "year_month_day_optional")]
+    pub date_from: Option<NaiveDate>,
+
+    #[serde(rename = "dateto", with = "year_month_day_optional")]
+    pub date_to: Option<NaiveDate>,
+
+    #[serde(rename = "numberinclass", deserialize_with = "deserialize_number_from_string")]
+    pub number_in_class: i64
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Parents {
+    #[serde(with = "string_i64_option")]
+    pub id: Option<i64>,
+
+    #[serde(rename = "firstname")]
+    pub first_name: String,
+
+    #[serde(rename = "lastname")]
+    pub last_name: String,
+
+    #[serde(with = "gender_option")]
+    pub gender: Option<Gender>
+}
+
+
+// only the base properties a lot dbi entries have in common
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct DBIBase {
+    #[serde(with = "string_i64_option")]
+    pub id: Option<i64>,
+
+    pub name: String,
+    pub short: String
 }
