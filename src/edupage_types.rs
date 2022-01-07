@@ -98,9 +98,11 @@ pub struct TimelineItem {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct DBI {
-    #[serde(with = "teachers")]
-    pub teachers: Vec<Teacher>
+    #[serde(with = "dbi_item")]
+    pub teachers: Vec<Teacher>,
 
+    #[serde(with = "dbi_item")]
+    pub classes: Vec<Class>
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -136,4 +138,25 @@ pub struct Teacher {
 
     #[serde(rename = "dateto", with = "year_month_day_optional")]
     pub date_to: Option<NaiveDate>
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Class {
+    #[serde(with = "string_i64_option")]
+    pub id: Option<i64>,
+
+    pub name: String,
+    pub short: String,
+    
+    #[serde(with = "string_i64_option")]
+    pub grade: Option<i64>,
+
+    #[serde(rename = "teacherid", with = "string_i64_option")]
+    pub teacher_id: Option<i64>,
+
+    #[serde(rename = "teacher2id", with = "string_i64_option")]
+    pub second_teacher_id: Option<i64>,
+
+    #[serde(rename = "classroomid", with = "string_i64_option")]
+    pub classroom_id: Option<i64>,
 }

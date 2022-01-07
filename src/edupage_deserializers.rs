@@ -386,39 +386,36 @@ pub mod javascript_date_format {
     }
 }
 
-pub mod teachers {
-    use serde::{self, Serializer, Deserializer, Serialize, ser, Deserialize};
+pub mod dbi_item {
+    use serde::{self, Serializer, Deserializer, Serialize, ser, Deserialize, de::DeserializeOwned};
     use serde_json::{Value, Map};
 
-    use crate::edupage_types::Teacher;
-
-    pub fn serialize<S>(
-        teacher: &Vec<Teacher>,
+    pub fn serialize<S, T>(
+        teacher: &Vec<T>,
         serializer: S,
     ) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
+        T: Serialize
     {
         let j = serde_json::to_string(teacher).map_err(ser::Error::custom)?;
         j.serialize(serializer)  
     }
 
-    pub fn deserialize<'de, D>(
-        deserializer: D,
-    ) -> Result<Vec<Teacher>, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
+    pub fn deserialize<'de, D, T>(
+        deserializer: D
+    ) -> Result<Vec<T>, D::Error>
+    where D: Deserializer<'de>, T: DeserializeOwned {
         let ts: Map<String, Value> = Map::deserialize(deserializer)?;
 
         
-        let mut teachers: Vec<Teacher> = Vec::new();
-        for teacher in ts.values() {
-            let t: Teacher = serde_json::from_value(teacher.clone()).unwrap();
-            teachers.push(t);
+        let mut output: Vec<T> = Vec::new();
+        for v in ts.values() {
+            let t: T = serde_json::from_value(v.clone()).unwrap();
+            output.push(t);
         }
 
-        Ok(teachers)
+        Ok(output)
     }
 }
 
