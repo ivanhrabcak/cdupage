@@ -46,10 +46,25 @@ pub enum UserID {
     Everyone
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct TimelineItem {
     #[serde(rename = "user", with = "user_id")]
     pub user: UserID,
+
+    #[serde(rename = "cas_pridania", with = "javascript_date_format")]
+    pub time_added: DateTime<Utc>,
+
+    #[serde(rename = "cas_pridania_btc", with = "javascript_date_format")]
+    pub time_added_btc: DateTime<Utc>,
+
+    #[serde(rename = "cas_udalosti", with = "javascript_date_format_option")]
+    pub time_of_event: Option<DateTime<Utc>>,
+
+    #[serde(rename = "data")]
+    pub additional_data: String,
+
+    #[serde(rename = "pocet_reakcii", deserialize_with = "deserialize_number_from_string")]
+    pub reactions_n: i64,
 
     #[serde(rename = "target_user", with = "user_id_option")]
     pub target_user: Option<UserID>,
@@ -66,6 +81,13 @@ pub struct TimelineItem {
     #[serde(rename = "reakcia_na", with = "string_i64_option")]
     pub reaction_to: Option<i64>,
 
+    pub text: String,
+
+    #[serde(rename = "user_meno")]
+    pub user_name: String,
+    
+    #[serde(rename = "vlastnik")]
+    pub owner: String
 
 }
 

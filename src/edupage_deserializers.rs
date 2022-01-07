@@ -288,3 +288,44 @@ pub mod javascript_date_format {
         Utc.datetime_from_str(&s, FORMAT).map_err(serde::de::Error::custom)
     }
 }
+
+pub mod javascript_date_format_option {
+    use chrono::{DateTime, Utc, TimeZone};
+    use serde::{self, Deserialize, Serializer, Deserializer};
+
+    const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S";
+
+    pub fn serialize<S>(
+        date: &Option<DateTime<Utc>>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        if date.is_none() {
+            return serializer.serialize_none();
+        }
+
+        let date = date.unwrap();
+        let s = format!("{}", date.format(FORMAT));
+        serializer.serialize_str(&s)
+    }
+
+    pub fn deserialize<'de, D>(
+        deserializer: D,
+    ) -> Result<Option<DateTime<Utc>>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let s: Option<String> = Deserialize::deserialize(deserializer)?;
+
+        if s.is_none() {
+            return Ok(None);
+        }
+        let s = s.unwrap();
+        match Utc.datetime_from_str(&s, FORMAT).map_err(serde::de::Error::custom) {
+            Ok(x) => Ok(Some(x)),
+            Err(e) => Err(e)
+        }
+    }
+}
