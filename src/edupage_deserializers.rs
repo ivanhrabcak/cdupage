@@ -1,6 +1,6 @@
 use num_enum::TryFromPrimitiveError;
 
-use crate::edupage_types::TimelineItemType;
+use crate::edupage_types::{TimelineItemType, UserID};
 
 pub const TIMELINE_ITEM_TYPE_NAMES: [&'static str; 18] = 
             ["news", "sprava", "h_dailyplan", "student_absent", "confirmation", 
@@ -70,68 +70,182 @@ pub mod timeline_item_type {
     }
 }
 
-macro_rules! scan {
-    ( $string:expr, $sep:expr, $( $x:ty ),+ ) => {{
-        let mut iter = $string.split($sep);
-        ($(iter.next().and_then(|word| word.parse::<$x>().ok()),)*)
-    }}
+fn get_string_representation(item_type: &UserID) -> String {
+    match item_type {
+        UserID::Teacher(id) => format!("Ucitel{}", id),
+        UserID::Student(id) => format!("Student{}", id),
+        UserID::Parent(id) => format!("Rodic{}", id),
+        UserID::Class(id) => format!("Trieda{}", id),
+        UserID::Plan(id) => format!("Plan{}", id),
+        UserID::CustomPlan(id) => format!("CustPlan{}", id),
+        UserID::StudentClass(id) => format!("StudTrieda{}", id),
+        UserID::OnlyStudent(id) => format!("StudentOnly{}", id),
+        UserID::StudentPlan(id) => format!("StudPlan{}", id),
+        UserID::OnlyAllStudents => "StudentOnly*".to_string(),
+        UserID::AllStudents => "Student*".to_string(),
+        UserID::AllTeachers => "Ucitel*".to_string(),
+        UserID::Everyone => "*".to_string(),
+    }
 }
 
-// pub mod user_id {
-//     use serde::{self, Deserialize, Serializer, Deserializer};
+fn parse_userid(s: &str) -> Option<UserID> {
+    // we first try to parse the simple ones
+    let user_type: Option<UserID> = match s {
+        "*" => Some(UserID::Everyone),
+        "Student*" => Some(UserID::AllStudents),
+        "Ucitel*" => Some(UserID::AllTeachers),
+        "StudentOnly*" => Some(UserID::OnlyAllStudents),
+        _ => None
+    };
 
-//     use crate::edupage_types::UserID;
+    if let Some(user_type) = user_type {
+        return Some(user_type)
+    }
 
-//     pub fn serialize<S>(
-//         item_type: &UserID,
-//         serializer: S,
-//     ) -> Result<S::Ok, S::Error>
-//     where
-//         S: Serializer,
-//     {
+    let mut id: String = String::new();
+    let mut user_type: String = String::new();
 
-//         let string_representation = match item_type {
-//             UserID::Teacher(id) => format!("Ucitel{}", id),
-//             UserID::Student(id) => format!("Student{}", id),
-//             UserID::Parent(id) => format!("Rodic{}", id),
-//             UserID::Class(id) => format!("Trieda{}", id),
-//             UserID::Plan(id) => format!("Plan{}", id),
-//             UserID::CustomPlan(id) => format!("CustPlan{}", id),
-//             UserID::StudentClass(id) => format!("StudTrieda{}", id),
-//             UserID::OnlyStudent(id) => format!("StudentOnly{}", id),
-//             UserID::StudentPlan(id) => format!("StudPlan{}", id),
-//             UserID::AllStudents => "Student*".to_string(),
-//             UserID::AllTeachers => "Ucitel*".to_string(),
-//             UserID::Everyone => "*".to_string(),
-//         };
+    for char in s.chars() {
 
-//         serializer.serialize_str(&string_representation)
-//     }
+        if char.is_alphabetic() {
+            user_type += &char.to_string();
+        }
+        else {
+            id += &char.to_string();
+        }
+    }
 
-//     pub fn deserialize<'de, D>(
-//         deserializer: D,
-//     ) -> Result<UserID, D::Error>
-//     where
-//         D: Deserializer<'de> 
-//     {
-//         let s: &str = &String::deserialize(deserializer)?;
+    let id: i128 = id.parse().unwrap(); // should always be a number
+    let user_type: &str = &user_type;
 
-//         // we first try to parse the simple ones
-//         let user_type: Option<UserID> = match s {
-//             "*" => Some(UserID::Everyone),
-//             "Student*" => Some(UserID::AllStudents),
-//             "Ucitel*" => Some(UserID::AllTeachers),
-//             _ => None
-//         };
+    Some(match user_type {
+        "Ucitel" => UserID::Teacher(id),
+        "Student" => UserID::Student(id),
+        "Rodic" => UserID::Parent(id),
+        "Trieda" => UserID::Class(id),
+        "Plan" => UserID::Plan(id),
+        "CustPlan" => UserID::CustomPlan(id),
+        "StudTrieda" => UserID::StudentClass(id),
+        "StudentOnly" => UserID::OnlyStudent(id),
+        "StudPlan" => UserID::StudentPlan(id),
+        _ => return None
+    })
+}
 
-//         if let Some(user_type) = user_type {
-//             return Ok(user_type)
-//         }
+pub mod user_id_option {
+    use serde::{self, Deserialize, Serializer, Deserializer};
 
-//         // let (user_type, i128) = scan!(user_type)
+    use crate::edupage_types::UserID;
 
-//     }
-// }
+    use super::{get_string_representation, parse_userid};
+
+    pub fn serialize<S>(
+        item_type: &Option<UserID>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        if item_type.is_none() {
+            return serializer.serialize_none();
+        }
+
+        let item_type = item_type.unwrap();
+        let string_representation = get_string_representation(&item_type);
+        serializer.serialize_str(&string_representation)
+    }
+
+    pub fn deserialize<'de, D>(
+        deserializer: D,
+    ) -> Result<Option<UserID>, D::Error>
+    where
+        D: Deserializer<'de> 
+    {
+        let s: Option<String> = Deserialize::deserialize(deserializer)?;
+        
+        if s.is_none() {
+            return Ok(None);
+        }
+
+        let s = &s.unwrap();
+
+        Ok(parse_userid(s))
+    }
+}
+
+pub mod user_id {
+    use serde::{self, Deserialize, Serializer, Deserializer};
+
+    use crate::edupage_types::UserID;
+
+    use super::{get_string_representation, parse_userid};
+
+    pub fn serialize<S>(
+        item_type: &UserID,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let string_representation = get_string_representation(item_type);
+        serializer.serialize_str(&string_representation)
+    }
+
+    pub fn deserialize<'de, D>(
+        deserializer: D,
+    ) -> Result<UserID, D::Error>
+    where
+        D: Deserializer<'de> 
+    {
+        let s: &str = &String::deserialize(deserializer)?;
+
+        let user_id = parse_userid(s);
+        if user_id.is_none() {
+            return Err(serde::de::Error::custom(format!("Unexpected user type")));
+        }
+
+        return Ok(user_id.unwrap())
+    }
+}
+
+pub mod string_i64_option {
+    use serde::{self, Deserialize, Serializer, Deserializer};
+
+    pub fn serialize<S>(
+        id: &Option<i64>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        if id.is_none() {
+            serializer.serialize_none()
+        }
+        else {
+            serializer.serialize_i64(id.unwrap())
+        }
+    }
+
+    pub fn deserialize<'de, D>(
+        deserializer: D,
+    ) -> Result<Option<i64>, D::Error>
+    where
+        D: Deserializer<'de> 
+    {
+        let s: Option<String> = Deserialize::deserialize(deserializer)?;
+
+        if s.is_none() {
+            return Ok(None);
+        }
+
+        let s = &s.unwrap();
+
+        match s.parse() {
+            Ok(n) => Ok(Some(n)),
+            Err(_) => Ok(None)
+        }
+    }
+}
 
 pub mod javascript_date_format {
     use chrono::{DateTime, Utc, TimeZone};

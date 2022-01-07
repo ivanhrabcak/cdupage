@@ -6,10 +6,11 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [target.'cfg(any(windows, unix))'.dependencies]
-reqwest = { version = "0.11", features = ["blocking", "json"] }
+reqwest = { version = "0.11", features = ["blocking", "json", "cookies"] }
 dotenv = "0.15.0"
 chrono = "0.4.19"
 serde_json = "1.0.74"
 serde = { version = "1.0", features = ["derive"] }
 num_enum = "0.5.6"
-text_io = "0.1.9"
+serde_urlencoded = "0.7.0"
+serde-aux = "3.0.1"
