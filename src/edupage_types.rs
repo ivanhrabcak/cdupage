@@ -1,4 +1,4 @@
-use chrono::{Utc, DateTime};
+use chrono::{Utc, DateTime, NaiveDate};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_aux::prelude::*;
@@ -94,18 +94,25 @@ pub struct TimelineItem {
     
     #[serde(rename = "vlastnik")]
     pub owner: String
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct DBI {
+    #[serde(with = "teachers")]
+    pub teachers: Vec<Teacher>
 
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct UserData {
     pub items: Vec<TimelineItem>,
+    pub dbi: DBI
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Teacher {
-    #[serde(deserialize_with = "deserialize_number_from_string")]
-    pub id: i64,
+    #[serde(with = "string_i64_option")]
+    pub id: Option<i64>,
 
     #[serde(rename = "firstname")]
     pub first_name: String,
@@ -115,12 +122,18 @@ pub struct Teacher {
 
     pub short: String,
 
-    #[serde(with = "gender")]
-    pub gender: Gender,
+    #[serde(with = "gender_option")]
+    pub gender: Option<Gender>,
 
-    #[serde(rename = "classroomid", deserialize_with = "deserialize_number_from_string")]
-    pub classroom_id: i64,
+    #[serde(rename = "classroomid", with = "string_i64_option")]
+    pub classroom_id: Option<i64>,
 
     #[serde(rename = "isOut")]
-    pub is_out: bool
+    pub is_out: bool,
+
+    #[serde(rename = "datefrom", with = "year_month_day_optional")]
+    pub date_from: Option<NaiveDate>,
+
+    #[serde(rename = "dateto", with = "year_month_day_optional")]
+    pub date_to: Option<NaiveDate>
 }

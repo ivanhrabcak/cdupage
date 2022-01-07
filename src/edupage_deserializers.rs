@@ -106,6 +106,64 @@ pub mod gender {
     }
 }
 
+
+pub mod gender_option {
+    use std::borrow::Cow;
+
+    use serde::{self, Deserialize, Serializer, Deserializer};
+
+    use crate::edupage_types::Gender;
+
+    pub fn serialize<S>(
+        gender: &Option<Gender>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        if gender.is_none() {
+            return serializer.serialize_none();
+        }
+        let gender = gender.unwrap();
+        serializer.serialize_str(match gender {
+            Gender::Male => "M",
+            Gender::Female => "F"
+        })
+    }
+
+    pub fn deserialize<'de, D>(
+        deserializer: D,
+    ) -> Result<Option<Gender>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let s: &Option<Cow<str>> = &Deserialize::deserialize(deserializer)?;
+
+        if s.is_none() {
+            return Ok(None);
+        }
+
+        let string = match s {
+                Some(val) => val,
+                None => panic!("called `Option::unwrap()` on a `None` value"),
+            }.as_ref().to_lowercase();
+        
+        if string.is_empty() {
+            return Ok(None);
+        }
+
+        if string.eq("f") {
+            Ok(Some(Gender::Female))
+        }
+        else if string.eq("m") {
+            Ok(Some(Gender::Male))
+        }
+        else {
+            Err(serde::de::Error::custom(format!("Failed to deserialize gender: {}", string)))
+        }
+    }
+}
+
 fn get_string_representation(item_type: &UserID) -> String {
     match item_type {
         UserID::Teacher(id) => format!("Ucitel{}", id),
@@ -275,6 +333,9 @@ pub mod string_i64_option {
         }
 
         let s = &s.unwrap();
+        if s.is_empty() {
+            return Ok(None);
+        }
 
         match s.parse() {
             Ok(n) => Ok(Some(n)),
@@ -322,6 +383,91 @@ pub mod javascript_date_format {
     {
         let s = String::deserialize(deserializer)?;
         Utc.datetime_from_str(&s, FORMAT).map_err(serde::de::Error::custom)
+    }
+}
+
+pub mod teachers {
+    use serde::{self, Serializer, Deserializer, Serialize, ser, Deserialize};
+    use serde_json::{Value, Map};
+
+    use crate::edupage_types::Teacher;
+
+    pub fn serialize<S>(
+        teacher: &Vec<Teacher>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let j = serde_json::to_string(teacher).map_err(ser::Error::custom)?;
+        j.serialize(serializer)  
+    }
+
+    pub fn deserialize<'de, D>(
+        deserializer: D,
+    ) -> Result<Vec<Teacher>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let ts: Map<String, Value> = Map::deserialize(deserializer)?;
+
+        
+        let mut teachers: Vec<Teacher> = Vec::new();
+        for teacher in ts.values() {
+            let t: Teacher = serde_json::from_value(teacher.clone()).unwrap();
+            teachers.push(t);
+        }
+
+        Ok(teachers)
+    }
+}
+
+
+pub mod year_month_day_optional {
+    use chrono::NaiveDate;
+    use serde::{self, Deserialize, Serializer, Deserializer};
+
+    const FORMAT: &'static str = "%Y-%m-%d";
+
+    pub fn serialize<S>(
+        date: &Option<NaiveDate>,
+        serializer: S,
+    ) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        if date.is_none() {
+            return serializer.serialize_none();
+        }
+        let date = date.unwrap();
+
+        let s = format!("{}", date.format(FORMAT));
+        serializer.serialize_str(&s)
+    }
+
+    pub fn deserialize<'de, D>(
+        deserializer: D,
+    ) -> Result<Option<NaiveDate>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let s: Option<String> = Deserialize::deserialize(deserializer)?;
+
+        if s.is_none() {
+            return Ok(None);
+        }
+        let s = s.unwrap();
+        
+        if s.is_empty() {
+            Ok(None)
+        }
+        else {
+            match NaiveDate::parse_from_str(&s, FORMAT) {
+                Ok(x) => Ok(Some(x)),
+                Err(e) => Err(serde::de::Error::custom(e.to_string()))
+            }
+        }
+        
     }
 }
 
