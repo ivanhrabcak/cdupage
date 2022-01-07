@@ -145,7 +145,7 @@ pub mod gender_option {
 
         let string = match s {
                 Some(val) => val,
-                None => panic!("called `Option::unwrap()` on a `None` value"),
+                None => unreachable!(),
             }.as_ref().to_lowercase();
         
         if string.is_empty() {
