@@ -7,7 +7,7 @@ pub trait Login {
 
 pub trait DBI {
     fn get_teachers(&self) -> Result<Vec<Teacher>, EdupageError>;
-    fn get_teacher_by_id(&self, id: i64) -> Result<Option<Student>, EdupageError>;
+    fn get_teacher_by_id(&self, id: i64) -> Result<Option<Teacher>, EdupageError>;
     
     fn get_students(&self) -> Result<Vec<Student>, EdupageError>;
     fn get_student_by_id(&self, id: i64) -> Result<Option<Student>, EdupageError>;

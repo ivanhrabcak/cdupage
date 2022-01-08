@@ -11,7 +11,7 @@ pub enum Gender {
     Female
 }
 
-#[derive(Serialize, Deserialize, Debug, IntoPrimitive, TryFromPrimitive, Clone, Copy)]
+#[derive(Serialize, Deserialize, Debug, IntoPrimitive, TryFromPrimitive, PartialEq, Clone, Copy)]
 #[repr(usize)]
 pub enum TimelineItemType {
     News = 0,
