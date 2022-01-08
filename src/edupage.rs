@@ -1,4 +1,3 @@
-use serde::{Serialize, Deserialize};
 use reqwest::blocking::Client;
 
 use crate::edupage_types::UserData;
