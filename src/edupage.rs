@@ -1,3 +1,5 @@
+use std::{fs::File, io::Write};
+
 use reqwest::blocking::Client;
 
 use crate::edupage_types::UserData;
@@ -35,6 +37,8 @@ impl Edupage {
             .split("userhome(").nth(1).unwrap()
             .replace("\n", "")
             .replace("\r", "");
+
+        File::create("dump.json").unwrap().write(json.as_bytes()).unwrap();
 
         self.data = Some(match serde_json::from_str(&json) {
             Ok(x) => x,

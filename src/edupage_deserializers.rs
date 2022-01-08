@@ -2,11 +2,11 @@ use num_enum::TryFromPrimitiveError;
 
 use crate::edupage_types::{TimelineItemType, UserID};
 
-pub const TIMELINE_ITEM_TYPE_NAMES: [&'static str; 18] = 
+pub const TIMELINE_ITEM_TYPE_NAMES: [&'static str; 19] = 
             ["news", "sprava", "h_dailyplan", "student_absent", "confirmation", 
                 "h_clearplany", "h_financie", "h_stravamenu", "h_clearisicdata", 
                 "substitution", "h_clearcache", "event", "h_homework", "znamka", 
-                "h_substitution", "h_znamky", "homework", "h_cleardbi"];
+                "h_substitution", "h_znamky", "homework", "h_cleardbi", "testpridelenie"];
 
 impl TryFrom<&str> for TimelineItemType {
     type Error = TryFromPrimitiveError<TimelineItemType>;
@@ -18,7 +18,7 @@ impl TryFrom<&str> for TimelineItemType {
             }
         }
 
-        return Err(TryFromPrimitiveError::<TimelineItemType> { number: usize::MAX })
+        Ok(TimelineItemType::Unknown)
     }
 }
 
@@ -407,7 +407,18 @@ pub mod dbi_item {
         deserializer: D
     ) -> Result<Vec<T>, D::Error>
     where D: Deserializer<'de>, T: DeserializeOwned {
-        let ts: Map<String, Value> = Map::deserialize(deserializer)?;
+        
+        #[derive(Deserialize)]
+        #[serde(untagged)]
+        enum MapOrVec<T> {
+            Map(Map<String, Value>),
+            Vec(Vec<T>)
+        }
+
+        let ts: Map<String, Value> = match MapOrVec::<T>::deserialize(deserializer)? {
+            MapOrVec::Map(m) => m,
+            MapOrVec::Vec(_) => return Ok(Vec::new())
+        };
 
         
         let mut output: Vec<T> = Vec::new();
@@ -419,7 +430,6 @@ pub mod dbi_item {
         Ok(output)
     }
 }
-
 
 pub mod year_month_day_optional {
     use chrono::NaiveDate;

@@ -32,7 +32,8 @@ pub enum TimelineItemType {
     HGrades = 15,
     Homework = 16,
     HClearDBI = 17,
-    Unknown = 18
+    Unknown = 18,
+    TestAssignment = 19
 }
 
 #[derive(Serialize, Deserialize, Debug, Copy, Clone)]
@@ -114,7 +115,7 @@ pub struct DBI {
     pub students: Vec<Student>,
 
     #[serde(with = "dbi_item")]
-    pub parents: Vec<Parents>,
+    pub parents: Vec<Parent>,
 
     #[serde(rename = "jeZUS")]
     pub is_art_school: bool
@@ -218,12 +219,12 @@ pub struct Student {
     #[serde(rename = "dateto", with = "year_month_day_optional")]
     pub date_to: Option<NaiveDate>,
 
-    #[serde(rename = "numberinclass", deserialize_with = "deserialize_number_from_string")]
-    pub number_in_class: i64
+    #[serde(rename = "numberinclass", with = "string_i64_option")]
+    pub number_in_class: Option<i64>
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Parents {
+pub struct Parent {
     #[serde(with = "string_i64_option")]
     pub id: Option<i64>,
 
