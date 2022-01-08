@@ -10,7 +10,7 @@ pub mod trait_implementations;
 mod tests {
     use std::assert_matches::assert_matches;
 
-    use crate::edupage_traits::Login;
+    use crate::edupage_traits::{Login, Timeline, DBI};
 
     fn get_env_var(name: &'static str) -> Option<String> {
         use std::env;
@@ -25,7 +25,7 @@ mod tests {
     fn login_test() {
         dotenv::dotenv().ok();
 
-        use crate::{edupage::Edupage};
+        use crate::edupage::Edupage;
 
         let subdomain = get_env_var("SUBDOMAIN");
         let username = get_env_var("USERNAME");
@@ -48,5 +48,46 @@ mod tests {
         assert_matches!(login_result, Ok(_));
 
         assert_eq!(edupage.logged_in(), true);
+    }
+
+    #[test]
+    fn dbi_test() {
+        dotenv::dotenv().ok();
+
+        use crate::{edupage::Edupage};
+
+        let subdomain = get_env_var("SUBDOMAIN");
+        let username = get_env_var("USERNAME");
+        let password = get_env_var("PASSWORD");
+
+        if vec![&subdomain, &username, &password].contains(&&None) {
+            debug_assert_ne!(subdomain, None);
+            debug_assert_ne!(username, None);
+            debug_assert_ne!(password, None);
+        }
+
+        let mut edupage = Edupage::new();
+        
+        let subdmain = subdomain.unwrap();
+        let username = username.unwrap();
+        let password = password.unwrap();
+
+        let login_result = edupage.login(&subdmain, &username, &password);
+        assert_matches!(login_result, Ok(_));
+
+        let homework = edupage.filter_timeline_by_item_type(crate::edupage_types::TimelineItemType::Homework);
+        assert_matches!(homework, Ok(_));
+
+        let teachers = edupage.get_teachers();
+        assert_matches!(teachers, Ok(_));
+
+        let students = edupage.get_students();
+        assert_matches!(students, Ok(_));
+
+        let subjects = edupage.get_subjects();
+        assert_matches!(subjects, Ok(_));
+
+        let classrooms = edupage.get_classrooms();
+        assert_matches!(classrooms, Ok(_));
     }
 }

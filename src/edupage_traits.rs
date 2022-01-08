@@ -20,6 +20,6 @@ pub trait DBI {
 }
 
 pub trait Timeline {
-    fn filter_by_item_type(&self, item_type: TimelineItemType) -> Result<Vec<TimelineItem>, EdupageError>;
-    fn filter_by_item_types(&self, item_types: Vec<TimelineItemType>) -> Result<Vec<TimelineItem>, EdupageError>;
+    fn filter_timeline_by_item_type(&self, item_type: TimelineItemType) -> Result<Vec<TimelineItem>, EdupageError>;
+    fn filter_timeline_by_item_types(&self, item_types: Vec<TimelineItemType>) -> Result<Vec<TimelineItem>, EdupageError>;
 }

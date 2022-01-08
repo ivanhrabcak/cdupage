@@ -12,12 +12,13 @@ impl TryFrom<&str> for TimelineItemType {
     type Error = TryFromPrimitiveError<TimelineItemType>;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
-        let integer_value = match TIMELINE_ITEM_TYPE_NAMES.binary_search(&value) {
-            Ok(v) => v,
-            Err(_) => Self::Unknown as usize
-        };
+        for (i, timeline_item_type) in TIMELINE_ITEM_TYPE_NAMES.iter().enumerate() {
+            if *timeline_item_type == value {
+                return i.try_into();
+            }
+        }
 
-        integer_value.try_into()
+        return Err(TryFromPrimitiveError::<TimelineItemType> { number: usize::MAX })
     }
 }
 

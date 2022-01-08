@@ -1,7 +1,7 @@
 use crate::{edupage_traits::Timeline, edupage::{Edupage, EdupageError}};
 
 impl Timeline for Edupage {
-    fn filter_by_item_type(&self, item_type: crate::edupage_types::TimelineItemType) -> Result<Vec<crate::edupage_types::TimelineItem>, crate::edupage::EdupageError> {
+    fn filter_timeline_by_item_type(&self, item_type: crate::edupage_types::TimelineItemType) -> Result<Vec<crate::edupage_types::TimelineItem>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
             return Err(EdupageError::NotLoggedIn)
         }
@@ -18,7 +18,7 @@ impl Timeline for Edupage {
         Ok(items)
     }
 
-    fn filter_by_item_types(&self, item_types: Vec<crate::edupage_types::TimelineItemType>) -> Result<Vec<crate::edupage_types::TimelineItem>, crate::edupage::EdupageError> {
+    fn filter_timeline_by_item_types(&self, item_types: Vec<crate::edupage_types::TimelineItemType>) -> Result<Vec<crate::edupage_types::TimelineItem>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
             return Err(EdupageError::NotLoggedIn)
         }
