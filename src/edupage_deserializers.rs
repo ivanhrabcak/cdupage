@@ -165,7 +165,7 @@ pub mod gender_option {
     }
 }
 
-fn get_string_representation(item_type: &UserID) -> String {
+pub fn get_string_representation(item_type: &UserID) -> String {
     match item_type {
         UserID::Teacher(id) => format!("Ucitel{}", id),
         UserID::Student(id) => format!("Student{}", id),
@@ -210,7 +210,7 @@ fn parse_userid(s: &str) -> Option<UserID> {
         }
     }
 
-    let id: i128 = id.parse().unwrap(); // should always be a number
+    let id: i64 = id.parse().unwrap(); // should always be a number
     let user_type: &str = &user_type;
 
     Some(match user_type {

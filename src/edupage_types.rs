@@ -1,4 +1,5 @@
 use chrono::{Utc, DateTime, NaiveDate};
+use node_bindgen::derive::node_bindgen;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_aux::prelude::*;
@@ -38,15 +39,15 @@ pub enum TimelineItemType {
 
 #[derive(Serialize, Deserialize, Debug, Copy, Clone)]
 pub enum UserID {
-    Teacher(i128),
-    Student(i128),
-    Parent(i128),
-    Class(i128),
-    Plan(i128),
-    CustomPlan(i128),
-    StudentClass(i128),
-    StudentPlan(i128),
-    OnlyStudent(i128),
+    Teacher(i64),
+    Student(i64),
+    Parent(i64),
+    Class(i64),
+    Plan(i64),
+    CustomPlan(i64),
+    StudentClass(i64),
+    StudentPlan(i64),
+    OnlyStudent(i64),
     AllStudents,
     OnlyAllStudents,
     AllTeachers,
