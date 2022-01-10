@@ -7,6 +7,7 @@ use serde_aux::prelude::*;
 use crate::edupage_deserializers::*;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[node_bindgen]
 pub enum Gender {
     Male,
     Female
@@ -37,7 +38,8 @@ pub enum TimelineItemType {
     TestAssignment = 19
 }
 
-#[derive(Serialize, Deserialize, Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
+#[node_bindgen]
 pub enum UserID {
     Teacher(i64),
     Student(i64),
@@ -56,13 +58,13 @@ pub enum UserID {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct TimelineItem {
-    #[serde(rename = "user", with = "user_id")]
+    #[serde(rename = "user")]
     pub user: UserID,
 
-    #[serde(rename = "cas_pridania", with = "javascript_date_format")]
+    #[serde(rename = "cas_pridania")]
     pub time_added: DateTime<Utc>,
 
-    #[serde(rename = "cas_pridania_btc", with = "javascript_date_format")]
+    #[serde(rename = "cas_pridania_btc")]
     pub time_added_btc: DateTime<Utc>,
 
     #[serde(rename = "cas_udalosti", with = "javascript_date_format_option")]
@@ -74,7 +76,7 @@ pub struct TimelineItem {
     #[serde(rename = "pocet_reakcii", deserialize_with = "deserialize_number_from_string")]
     pub reactions_n: i64,
 
-    #[serde(rename = "target_user", with = "user_id_option")]
+    #[serde(rename = "target_user")]
     pub target_user: Option<UserID>,
 
     #[serde(rename = "typ", with = "timeline_item_type")]
@@ -83,7 +85,6 @@ pub struct TimelineItem {
     #[serde(rename = "timelineid", deserialize_with = "deserialize_number_from_string")]
     pub timeline_id: i64,
 
-    #[serde(with = "javascript_date_format")]
     pub timestamp: DateTime<Utc>,
 
     #[serde(rename = "reakcia_na", with = "string_i64_option")]
@@ -100,22 +101,22 @@ pub struct TimelineItem {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct DBI {
-    #[serde(with = "dbi_item")]
+    #[serde(deserialize_with = "deserialize_dbi_base")]
     pub teachers: Vec<Teacher>,
 
-    #[serde(with = "dbi_item")]
+    #[serde(deserialize_with = "deserialize_dbi_base")]
     pub classes: Vec<Class>,
 
-    #[serde(with = "dbi_item")]
+    #[serde(deserialize_with = "deserialize_dbi_base")]
     pub subjects: Vec<DBIBase>,
 
-    #[serde(with = "dbi_item")]
+    #[serde(deserialize_with = "deserialize_dbi_base")]
     pub classrooms: Vec<DBIBase>,
 
-    #[serde(with = "dbi_item")]
+    #[serde(deserialize_with = "deserialize_dbi_base")]
     pub students: Vec<Student>,
 
-    #[serde(with = "dbi_item")]
+    #[serde(deserialize_with = "deserialize_dbi_base")]
     pub parents: Vec<Parent>,
 
     #[serde(rename = "jeZUS")]
@@ -133,7 +134,7 @@ pub struct UserData {
     #[serde(rename = "meninyZajtra")]
     pub nameday_tomorrow: String,
 
-    #[serde(rename = "userid", with = "user_id")]
+    #[serde(rename = "userid")]
     pub user_id: UserID
 }
 
@@ -159,10 +160,10 @@ pub struct Teacher {
     #[serde(rename = "isOut")]
     pub is_out: bool,
 
-    #[serde(rename = "datefrom", with = "year_month_day_optional")]
+    #[serde(rename = "datefrom")]
     pub date_from: Option<NaiveDate>,
 
-    #[serde(rename = "dateto", with = "year_month_day_optional")]
+    #[serde(rename = "dateto")]
     pub date_to: Option<NaiveDate>
 }
 
@@ -214,10 +215,10 @@ pub struct Student {
     #[serde(with = "gender_option")]
     pub gender: Option<Gender>,
 
-    #[serde(rename = "datefrom", with = "year_month_day_optional")]
+    #[serde(rename = "datefrom")]
     pub date_from: Option<NaiveDate>,
 
-    #[serde(rename = "dateto", with = "year_month_day_optional")]
+    #[serde(rename = "dateto")]
     pub date_to: Option<NaiveDate>,
 
     #[serde(rename = "numberinclass", with = "string_i64_option")]
@@ -241,7 +242,7 @@ pub struct Parent {
 
 
 // only the base properties a lot dbi entries have in common
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Deserialize, Debug, Clone)]
 pub struct DBIBase {
     #[serde(with = "string_i64_option")]
     pub id: Option<i64>,

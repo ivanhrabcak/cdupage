@@ -1,6 +1,8 @@
 use num_enum::TryFromPrimitiveError;
+use serde::{Serialize, Deserialize, Deserializer, ser, de::DeserializeOwned};
+use serde_json::{Value, Map};
 
-use crate::edupage_types::{TimelineItemType, UserID};
+use crate::edupage_types::{TimelineItemType, UserID, DBIBase};
 
 pub const TIMELINE_ITEM_TYPE_NAMES: [&'static str; 19] = 
             ["news", "sprava", "h_dailyplan", "student_absent", "confirmation", 
@@ -227,71 +229,17 @@ fn parse_userid(s: &str) -> Option<UserID> {
     })
 }
 
-pub mod user_id_option {
-    use serde::{self, Deserialize, Serializer, Deserializer};
-
-    use crate::edupage_types::UserID;
-
-    use super::{get_string_representation, parse_userid};
-
-    pub fn serialize<S>(
-        item_type: &Option<UserID>,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        if item_type.is_none() {
-            return serializer.serialize_none();
-        }
-
-        let item_type = item_type.unwrap();
-        let string_representation = get_string_representation(&item_type);
+impl Serialize for UserID {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where S: serde::Serializer {
+        let string_representation = get_string_representation(self);
         serializer.serialize_str(&string_representation)
-    }
-
-    pub fn deserialize<'de, D>(
-        deserializer: D,
-    ) -> Result<Option<UserID>, D::Error>
-    where
-        D: Deserializer<'de> 
-    {
-        let s: Option<String> = Deserialize::deserialize(deserializer)?;
-        
-        if s.is_none() {
-            return Ok(None);
-        }
-
-        let s = &s.unwrap();
-
-        Ok(parse_userid(s))
     }
 }
 
-pub mod user_id {
-    use serde::{self, Deserialize, Serializer, Deserializer};
-
-    use crate::edupage_types::UserID;
-
-    use super::{get_string_representation, parse_userid};
-
-    pub fn serialize<S>(
-        item_type: &UserID,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        let string_representation = get_string_representation(item_type);
-        serializer.serialize_str(&string_representation)
-    }
-
-    pub fn deserialize<'de, D>(
-        deserializer: D,
-    ) -> Result<UserID, D::Error>
-    where
-        D: Deserializer<'de> 
-    {
+impl<'de> Deserialize<'de> for UserID {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where D: Deserializer<'de> {
         let s: &str = &String::deserialize(deserializer)?;
 
         let user_id = parse_userid(s);
@@ -344,91 +292,39 @@ pub mod string_i64_option {
         }
     }
 }
-
-pub mod javascript_date_format {
-    use chrono::{DateTime, Utc, TimeZone};
-    use serde::{self, Deserialize, Serializer, Deserializer};
-
-    const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S";
-
-    // The signature of a serialize_with function must follow the pattern:
-    //
-    //    fn serialize<S>(&T, S) -> Result<S::Ok, S::Error>
-    //    where
-    //        S: Serializer
-    //
-    // although it may also be generic over the input types T.
-    pub fn serialize<S>(
-        date: &DateTime<Utc>,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        let s = format!("{}", date.format(FORMAT));
-        serializer.serialize_str(&s)
-    }
-
-    // The signature of a deserialize_with function must follow the pattern:
-    //
-    //    fn deserialize<'de, D>(D) -> Result<T, D::Error>
-    //    where
-    //        D: Deserializer<'de>
-    //
-    // although it may also be generic over the output types T.
-    pub fn deserialize<'de, D>(
-        deserializer: D,
-    ) -> Result<DateTime<Utc>, D::Error>
-    where
-        D: Deserializer<'de>,
-    {
-        let s = String::deserialize(deserializer)?;
-        Utc.datetime_from_str(&s, FORMAT).map_err(serde::de::Error::custom)
+impl Serialize for DBIBase {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where S: serde::Serializer {
+        let j = serde_json::to_string(self).map_err(ser::Error::custom)?;
+        j.serialize(serializer)  
     }
 }
 
-pub mod dbi_item {
-    use serde::{self, Serializer, Deserializer, Serialize, ser, Deserialize, de::DeserializeOwned};
-    use serde_json::{Value, Map};
-
-    pub fn serialize<S, T>(
-        teacher: &Vec<T>,
-        serializer: S,
-    ) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-        T: Serialize
-    {
-        let j = serde_json::to_string(teacher).map_err(ser::Error::custom)?;
-        j.serialize(serializer)  
+pub fn deserialize_dbi_base<'de, D, T>(
+    deserializer: D
+) -> Result<Vec<T>, D::Error>
+where D: Deserializer<'de>, T: DeserializeOwned {
+    
+    #[derive(Deserialize)]
+    #[serde(untagged)]
+    enum MapOrVec<T> {
+        Map(Map<String, Value>),
+        Vec(Vec<T>)
     }
 
-    pub fn deserialize<'de, D, T>(
-        deserializer: D
-    ) -> Result<Vec<T>, D::Error>
-    where D: Deserializer<'de>, T: DeserializeOwned {
-        
-        #[derive(Deserialize)]
-        #[serde(untagged)]
-        enum MapOrVec<T> {
-            Map(Map<String, Value>),
-            Vec(Vec<T>)
-        }
+    let ts: Map<String, Value> = match MapOrVec::<T>::deserialize(deserializer)? {
+        MapOrVec::Map(m) => m,
+        MapOrVec::Vec(_) => return Ok(Vec::new())
+    };
 
-        let ts: Map<String, Value> = match MapOrVec::<T>::deserialize(deserializer)? {
-            MapOrVec::Map(m) => m,
-            MapOrVec::Vec(_) => return Ok(Vec::new())
-        };
-
-        
-        let mut output: Vec<T> = Vec::new();
-        for v in ts.values() {
-            let t: T = serde_json::from_value(v.clone()).unwrap();
-            output.push(t);
-        }
-
-        Ok(output)
+    
+    let mut output: Vec<T> = Vec::new();
+    for v in ts.values() {
+        let t: T = serde_json::from_value(v.clone()).unwrap();
+        output.push(t);
     }
+
+    Ok(output)
 }
 
 pub mod year_month_day_optional {

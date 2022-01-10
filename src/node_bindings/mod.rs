@@ -3,7 +3,6 @@ use node_bindgen::derive::node_bindgen;
 use crate::{edupage::{Edupage as RealEdupage, EdupageError}, edupage_traits::{Login, DBI}, edupage_types::Teacher};
 
 mod trait_implementations;
-mod edupage_types;
 mod external_wrapped;
 
 struct Edupage {
