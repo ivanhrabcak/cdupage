@@ -3,3 +3,4 @@ Cargo.lock
 .env
 dump.json
 test.js
+index.js
