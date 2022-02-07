@@ -1,5 +1,4 @@
 use chrono::{Utc, DateTime, NaiveDate};
-use node_bindgen::derive::node_bindgen;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_aux::prelude::*;
