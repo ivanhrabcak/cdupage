@@ -21,6 +21,3 @@ dotenv = "0.15.0"
 
 [lib]
 crate-type = ["cdylib"]
-
-[build-dependencies]
-node-bindgen = { version = "5.0.0", features = ["build"] }

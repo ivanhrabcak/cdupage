@@ -4,8 +4,6 @@ pub mod edupage_deserializers;
 pub mod edupage_traits;
 pub mod trait_implementations;
 
-// bindings
-pub mod node_bindings;
 
 #[cfg(test)]
 #[macro_use] 

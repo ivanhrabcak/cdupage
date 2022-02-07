@@ -7,7 +7,6 @@ use serde_aux::prelude::*;
 use crate::edupage_deserializers::*;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
-#[node_bindgen]
 pub enum Gender {
     Male,
     Female
@@ -39,7 +38,6 @@ pub enum TimelineItemType {
 }
 
 #[derive(Debug, Copy, Clone)]
-#[node_bindgen]
 pub enum UserID {
     Teacher(i64),
     Student(i64),
