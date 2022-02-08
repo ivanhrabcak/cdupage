@@ -8,7 +8,7 @@ use crate::edupage_types::UserData;
 pub struct Edupage {
     pub(crate) is_logged_in: bool,
     pub(crate) client: reqwest::blocking::Client,
-    pub(crate) data: Option<UserData>
+    pub(crate) data: Option<UserData>,
 }
 
 #[derive(Debug)]
@@ -18,27 +18,40 @@ pub enum EdupageError {
     InvalidResponse,
     ParseError(String),
     SerializationError(String),
-    NotLoggedIn
+    NotLoggedIn,
 }
 
 impl Edupage {
     pub fn new() -> Self {
         let client = Client::builder()
             .connection_verbose(true)
-            .cookie_store(true).build().unwrap();
+            .cookie_store(true)
+            .build()
+            .unwrap();
 
-        Self { is_logged_in: false, data: None, client }
+        Self {
+            is_logged_in: false,
+            data: None,
+            client,
+        }
     }
 
     pub(crate) fn parse_login_data(&mut self, html: String) -> Result<(), String> {
-        let json = html.split("$j(document).ready(function() {").nth(1).unwrap()
-            .split(");").nth(0).unwrap()
-            .replace("\t", "")
-            .split("userhome(").nth(1).unwrap()
-            .replace("\n", "")
-            .replace("\r", "");
+        let json = match html.split("userhome(").nth(1) {
+            Some(x) => x,
+            None => return Err("Bad data!".to_string()),
+        }
+        .rsplitn(3, ");")
+        .nth(2)
+        .unwrap()
+        .replace("\t", "")
+        .replace("\n", "")
+        .replace("\r", "");
 
-        File::create("dump.json").unwrap().write(json.as_bytes()).unwrap();
+        File::create("dump.json")
+            .unwrap()
+            .write(json.as_bytes())
+            .unwrap();
 
         self.data = Some(match serde_json::from_str(&json) {
             Ok(x) => x,

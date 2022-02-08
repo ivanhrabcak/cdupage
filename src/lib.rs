@@ -1,17 +1,15 @@
-pub mod edupage_types;
 pub mod edupage;
 pub mod edupage_deserializers;
 pub mod edupage_traits;
+pub mod edupage_types;
 pub mod trait_implementations;
 
-
 #[cfg(test)]
-#[macro_use] 
+#[macro_use]
 extern crate assert_matches;
 
 #[cfg(test)]
 mod tests {
-    
 
     use crate::edupage_traits::{Login, Timeline, DBI};
 
@@ -20,7 +18,7 @@ mod tests {
 
         match env::var(name) {
             Ok(v) => Some(v),
-            Err(_) => None
+            Err(_) => None,
         }
     }
 
@@ -41,7 +39,7 @@ mod tests {
         }
 
         let mut edupage = Edupage::new();
-        
+
         let subdmain = subdomain.unwrap();
         let username = username.unwrap();
         let password = password.unwrap();
@@ -57,7 +55,7 @@ mod tests {
     fn dbi_test() {
         dotenv::dotenv().ok();
 
-        use crate::{edupage::Edupage};
+        use crate::edupage::Edupage;
 
         let subdomain = get_env_var("SUBDOMAIN");
         let username = get_env_var("USERNAME");
@@ -70,7 +68,7 @@ mod tests {
         }
 
         let mut edupage = Edupage::new();
-        
+
         let subdmain = subdomain.unwrap();
         let username = username.unwrap();
         let password = password.unwrap();
@@ -78,7 +76,8 @@ mod tests {
         let login_result = edupage.login(&subdmain, &username, &password);
         assert_matches!(login_result, Ok(_));
 
-        let homework = edupage.filter_timeline_by_item_type(crate::edupage_types::TimelineItemType::Homework);
+        let homework =
+            edupage.filter_timeline_by_item_type(crate::edupage_types::TimelineItemType::Homework);
         assert_matches!(homework, Ok(_));
 
         let teachers = edupage.get_teachers();
