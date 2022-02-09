@@ -1,7 +1,9 @@
 use serde::{Deserialize, Serialize};
 
+use common_macros::hash_map;
+
 use crate::{
-    edupage::{Edupage, EdupageError},
+    edupage::{Edupage, EdupageError, RequestType},
     edupage_traits::Login,
 };
 
@@ -31,8 +33,7 @@ impl Login for Edupage {
     ) -> Result<(), EdupageError> {
         let url = format!("https://{}.edupage.org/login/index.php", subdomain);
 
-        let request = self.client.get(url);
-        let result = request.send();
+        let result = self.request(url, RequestType::GET, None, None);
 
         if result.is_err() {
             return Err(EdupageError::HTTPError(result.unwrap_err().to_string()));
@@ -73,14 +74,15 @@ impl Login for Edupage {
         };
 
         let url = format!("https://{}.edupage.org/login/edubarLogin.php", subdomain);
-        let request = self
-            .client
-            .post(url)
-            .body(post_data)
-            // it took me 3 hours to figure out that this header is REQUIRED!!
-            .header("Content-Type", "application/x-www-form-urlencoded");
 
-        let result = request.send();
+        let result = self.request(
+            url,
+            RequestType::POST,
+            Some(hash_map! {
+                "Content-Type".to_string() => "application/x-www-form-urlencoded".to_string()
+            }),
+            Some(post_data),
+        );
 
         if result.is_err() {
             return Err(EdupageError::HTTPError(result.unwrap_err().to_string()));
