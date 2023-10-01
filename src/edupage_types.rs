@@ -1,4 +1,4 @@
-use chrono::{DateTime, NaiveDate, Utc};
+use chrono::{DateTime, NaiveDate, NaiveDateTime, Utc};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_aux::prelude::*;
@@ -19,7 +19,7 @@ pub enum TimelineItemType {
     News = 0,
     Message = 1,
     HDailyPlan = 2,
-    StudentAbset = 3,
+    StudentAbsent = 3,
     Confirmation = 4,
     HClearPlans = 5,
     HFinances = 6,
@@ -142,6 +142,9 @@ pub struct UserData {
 
     #[serde(rename = "userid")]
     pub user_id: UserID,
+
+    #[serde(rename = "zvonenia")]
+    pub ringing_times: Vec<RingingTime>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -253,4 +256,31 @@ pub struct DBIBase {
 
     pub name: String,
     pub short: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Lesson {
+    pub teachers: Vec<Teacher>,
+    pub classrooms: Vec<DBIBase>,
+    pub start_of_lesson: NaiveDateTime,
+    pub end_of_lesson: NaiveDateTime,
+    pub online_lesson_link: Option<String>,
+    pub subject_id: i64,
+    pub name: String
+}
+
+pub struct Timetable {
+    pub lessons: Vec<Lesson>
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct RingingTime {
+    #[serde(deserialize_with = "deserialize_number_from_string")]
+    pub name: i64,
+
+    #[serde(rename = "starttime", deserialize_with = "deserialize_time")]
+    pub start_time: NaiveDateTime,
+
+    #[serde(rename = "endtime", deserialize_with = "deserialize_time")]
+    pub end_time: NaiveDateTime,
 }

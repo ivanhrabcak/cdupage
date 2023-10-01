@@ -102,6 +102,7 @@ impl Login for Edupage {
         match self.parse_login_data(response_text.to_string()) {
             Ok(_) => {
                 self.is_logged_in = true;
+                self.subdomain = Some(subdomain.to_string());
                 Ok(())
             }
             Err(e) => Err(EdupageError::ParseError(e.to_string())),

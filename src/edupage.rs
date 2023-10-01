@@ -13,6 +13,8 @@ pub struct Edupage {
     pub(crate) is_logged_in: bool,
     pub(crate) client: reqwest::blocking::Client,
     pub(crate) data: Option<UserData>,
+    pub(crate) gsec_hash: Option<String>,
+    pub(crate) subdomain: Option<String>
 }
 
 #[derive(Debug)]
@@ -42,6 +44,8 @@ impl Edupage {
             is_logged_in: false,
             data: None,
             client,
+            gsec_hash: None,
+            subdomain: None
         }
     }
 
@@ -110,6 +114,13 @@ impl Edupage {
                 return Err(e.to_string());
             }
         });
+
+        self.gsec_hash = match html.split("ASC.gsechash=\"").nth(1) {
+            None => {
+                return Err("No gsechash in response!".to_string())
+            }
+            Some(v) => Some(v.split("\"").nth(0).unwrap().to_string())
+        };
 
         Ok(())
     }

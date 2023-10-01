@@ -1,4 +1,6 @@
-use crate::{edupage::EdupageError, edupage_types::*};
+use chrono::{NaiveDate, NaiveDateTime};
+use serde::{Deserialize, Serialize};
+use crate::{edupage::EdupageError, edupage_types::*, edupage_types::Timetable as EduTimetable};
 
 pub trait Login {
     fn login(&mut self, 
@@ -22,4 +24,26 @@ pub trait DBI {
 pub trait Timeline {
     fn filter_timeline_by_item_type(&self, item_type: TimelineItemType) -> Result<Vec<TimelineItem>, EdupageError>;
     fn filter_timeline_by_item_types(&self, item_types: Vec<TimelineItemType>) -> Result<Vec<TimelineItem>, EdupageError>;
+}
+
+pub trait Timetable {
+    fn get_timetable(&self, date: NaiveDate) -> Result<EduTimetable, EdupageError>;
+}
+
+pub trait Substitution {
+    fn get_substitution_html(
+        &self,
+        date: &NaiveDate,
+        subdomain: &String,
+    ) -> Result<String, EdupageError>;
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+pub enum NextDayPart {
+    LESSON, BREAK
+}
+
+pub trait Ringing {
+    fn get_ringing_times(&self) -> Vec<RingingTime>;
+    fn get_next_lesson_time(&self, time: NaiveDateTime) -> Option<(NaiveDateTime, NextDayPart)>;
 }
