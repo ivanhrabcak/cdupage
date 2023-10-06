@@ -22,7 +22,7 @@ impl Ringing for Edupage {
     }
 
     fn get_next_lesson_time(&self, time: NaiveDateTime) -> Option<(chrono::NaiveDateTime, NextDayPart)> {
-        let day_of_week = Local::now().date().format("%a").to_string();
+        let day_of_week = Local::now().date_naive().format("%a").to_string();
         if day_of_week == "Sun" || day_of_week == "Sat" {
             return None;
         }

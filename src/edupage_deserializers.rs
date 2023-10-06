@@ -1,3 +1,4 @@
+use chrono::{NaiveDateTime, Local, NaiveTime};
 use num_enum::TryFromPrimitiveError;
 use serde::{de::DeserializeOwned, ser, Deserialize, Deserializer, Serialize};
 use serde_json::{Map, Value};
@@ -410,4 +411,27 @@ pub mod javascript_date_format_option {
             Err(e) => Err(e),
         }
     }
+}
+
+pub fn deserialize_time<'de, D>(deserializer: D) -> Result<NaiveDateTime, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let s: &str = &String::deserialize(deserializer)?;
+
+    let time: Vec<&str> = s.split(":").collect();
+
+    let hours: u32 = match time[0].parse() {
+        Ok(x) => x,
+        Err(_) => return Err(serde::de::Error::custom("Failed to parse hours")),
+    };
+    let minutes: u32 = match time[1].parse() {
+        Ok(x) => x,
+        Err(_) => return Err(serde::de::Error::custom("Failed to parse minutes")),
+    };
+
+    Ok(NaiveDateTime::new(
+        Local::now().date_naive(),
+        NaiveTime::from_hms_opt(hours, minutes, 0).unwrap(),
+    ))
 }

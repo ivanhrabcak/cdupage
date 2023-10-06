@@ -40,11 +40,11 @@ mod tests {
 
         let mut edupage = Edupage::new();
 
-        let subdmain = subdomain.unwrap();
+        let subdomain = subdomain.unwrap();
         let username = username.unwrap();
         let password = password.unwrap();
 
-        let login_result = edupage.login(&subdmain, &username, &password);
+        let login_result = edupage.login(&subdomain, &username, &password);
 
         assert_matches!(login_result, Ok(_));
 
@@ -69,11 +69,11 @@ mod tests {
 
         let mut edupage = Edupage::new();
 
-        let subdmain = subdomain.unwrap();
+        let subdomain = subdomain.unwrap();
         let username = username.unwrap();
         let password = password.unwrap();
 
-        let login_result = edupage.login(&subdmain, &username, &password);
+        let login_result = edupage.login(&subdomain, &username, &password);
         assert_matches!(login_result, Ok(_));
 
         let homework =
@@ -91,5 +91,33 @@ mod tests {
 
         let classrooms = edupage.get_classrooms();
         assert_matches!(classrooms, Ok(_));
+    }
+
+    #[test]
+    fn timetable_test() {
+        dotenv::dotenv().ok();
+
+        use crate::edupage::Edupage;
+
+        let subdomain = get_env_var("SUBDOMAIN");
+        let username = get_env_var("USERNAME");
+        let password = get_env_var("PASSWORD");
+
+        if vec![&subdomain, &username, &password].contains(&&None) {
+            debug_assert_ne!(subdomain, None);
+            debug_assert_ne!(username, None);
+            debug_assert_ne!(password, None);
+        }
+
+        let mut edupage = Edupage::new();
+
+        let subdomain = subdomain.unwrap();
+        let username = username.unwrap();
+        let password = password.unwrap();
+
+        let login_result = edupage.login(&subdomain, &username, &password);
+        assert_matches!(login_result, Ok(_));
+
+        // edupage.get_timetable();
     }
 }
