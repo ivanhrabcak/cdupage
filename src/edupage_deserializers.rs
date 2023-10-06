@@ -279,7 +279,10 @@ pub mod string_i64_option {
     where
         D: Deserializer<'de>,
     {
-        let s: Option<String> = Deserialize::deserialize(deserializer)?;
+        let s: Option<String> = match Deserialize::deserialize(deserializer) {
+            Ok(x) => x,
+            Err(_) => return Ok(None),
+        };
 
         if s.is_none() {
             return Ok(None);
@@ -325,7 +328,6 @@ where
 
     let mut output: Vec<T> = Vec::new();
     for v in ts.values() {
-        println!("{:?}", &v);
         let t: T = serde_json::from_value(v.clone()).unwrap();
         output.push(t);
     }
@@ -356,7 +358,10 @@ pub mod year_month_day_optional {
     where
         D: Deserializer<'de>,
     {
-        let s: Option<String> = Deserialize::deserialize(deserializer)?;
+        let s: Option<String> = match Deserialize::deserialize(deserializer) {
+            Ok(x) => x,
+            Err(_) => return Ok(None)
+        };
 
         if s.is_none() {
             return Ok(None);
@@ -436,34 +441,40 @@ where
     ))
 }
 
-pub mod string_i64_vec {
+pub mod string_i64_vec_option {
     use serde::{Serializer, ser::SerializeSeq, Deserializer, Deserialize};
 
-    pub fn serialize<S>(vec: &Vec<i64>, serializer: S) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(vec: &Option<Vec<i64>>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
 
+        if vec.is_none() {
+            return serializer.serialize_none()
+        }
+
+        let vec = vec.clone().unwrap();
+
         let mut seq = serializer.serialize_seq(Some(vec.len()))?;
         for item in vec {
-            seq.serialize_element(item)?;
+            seq.serialize_element(&item)?;
         }
         seq.end()
     }
 
-    pub fn deserialize<'de, D>(deserializer: D) -> Result<Vec<i64>, D::Error>
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<Vec<i64>>, D::Error>
     where
         D: Deserializer<'de>,
     {
         let s: Option<Vec<String>> = Deserialize::deserialize(deserializer)?;
 
         if let None = s {
-            return Ok(Vec::new())
+            return Ok(None)
         }
 
         let seq = s.unwrap();
         if seq.len() == 0 {
-            return Ok(Vec::new())
+            return Ok(Some(Vec::new()))
         }
 
         let mut result = Vec::with_capacity(seq.len());
@@ -476,19 +487,25 @@ pub mod string_i64_vec {
             result.push(parsed_item);
         }
 
-        Ok(result)
+        Ok(Some(result))
     }
 }
 
-pub mod plan_item_type {
-    use serde::{Serializer, ser::SerializeSeq, Deserializer, Deserialize};
+pub mod plan_item_type_option {
+    use serde::{Serializer, Deserializer, Deserialize};
 
     use crate::edupage_types::PlanItemType;
 
-    pub fn serialize<S>(item: &PlanItemType, serializer: S) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(item: &Option<PlanItemType>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
+
+        if item.is_none() {
+            return serializer.serialize_none();
+        }
+
+        let item = item.unwrap();
 
         match item {
             PlanItemType::Period => serializer.serialize_str("period"),
@@ -496,15 +513,18 @@ pub mod plan_item_type {
         }
     }
 
-    pub fn deserialize<'de, D>(deserializer: D) -> Result<PlanItemType, D::Error>
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<PlanItemType>, D::Error>
     where
         D: Deserializer<'de>,
     {
-        let value: &str = Deserialize::deserialize(deserializer)?;
+        let value: &str = match Deserialize::deserialize(deserializer) {
+            Ok(x) => x,
+            Err(_) => return Ok(None),
+        };
 
         Ok(match value {
-            "period" => PlanItemType::Period,
-            "lesson" => PlanItemType::Lesson,
+            "period" => Some(PlanItemType::Period),
+            "lesson" => Some(PlanItemType::Lesson),
             _ => return Err(serde::de::Error::custom(format!("Unknown plan item type {value}")))
         })
         
@@ -512,7 +532,7 @@ pub mod plan_item_type {
 }
 
 pub mod hh_mm_naivedatetime_option {
-    use chrono::{NaiveDateTime, Timelike};
+    use chrono::{NaiveDateTime, Timelike, Utc, NaiveTime};
     use serde::{Serializer, Deserializer, Deserialize};
 
     pub fn serialize<S>(item: &Option<NaiveDateTime>, serializer: S) -> Result<S::Ok, S::Error>
@@ -537,10 +557,25 @@ pub mod hh_mm_naivedatetime_option {
             Err(_) => return Ok(None),
         };
 
-        match NaiveDateTime::parse_from_str(value, "%H:%M") {
-            Ok(d) => Ok(Some(d)),
-            Err(e) => Err(serde::de::Error::custom(e.to_string()))
-        }
+        let mut parts = value.split(":");
+
+        let hour = match parts.next() {
+            Some(h) => h.parse::<u32>().unwrap(),
+            None => return Err(serde::de::Error::custom(format!("Failed to deserialize hour from {value}"))),
+        };
+
+        let minute = match parts.next() {
+            Some(h) => h.parse::<u32>().unwrap(),
+            None => return Err(serde::de::Error::custom(format!("Failed to deserialize minute from {value}"))),
+        };
+
+        let now = Utc::now().naive_local();
+        let time = match NaiveTime::from_hms_opt(hour, minute, 0) {
+            Some(x) => x,
+            None => return Err(serde::de::Error::custom(format!("Failed to create NaiveTime from {value}"))),
+        };
+
+        Ok(Some(NaiveDateTime::new(now.date(), time)))
     }
 }
 
