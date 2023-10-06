@@ -435,3 +435,115 @@ where
         NaiveTime::from_hms_opt(hours, minutes, 0).unwrap(),
     ))
 }
+
+pub mod string_i64_vec {
+    use serde::{Serializer, ser::SerializeSeq, Deserializer, Deserialize};
+
+    pub fn serialize<S>(vec: &Vec<i64>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+
+        let mut seq = serializer.serialize_seq(Some(vec.len()))?;
+        for item in vec {
+            seq.serialize_element(item)?;
+        }
+        seq.end()
+    }
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Vec<i64>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let s: Option<Vec<String>> = Deserialize::deserialize(deserializer)?;
+
+        if let None = s {
+            return Ok(Vec::new())
+        }
+
+        let seq = s.unwrap();
+        if seq.len() == 0 {
+            return Ok(Vec::new())
+        }
+
+        let mut result = Vec::with_capacity(seq.len());
+        for item in seq {
+            let parsed_item = match item.parse::<i64>() {
+                Ok(v) => v,
+                Err(e) => return Err(serde::de::Error::custom(e.to_string()))
+            };
+
+            result.push(parsed_item);
+        }
+
+        Ok(result)
+    }
+}
+
+pub mod plan_item_type {
+    use serde::{Serializer, ser::SerializeSeq, Deserializer, Deserialize};
+
+    use crate::edupage_types::PlanItemType;
+
+    pub fn serialize<S>(item: &PlanItemType, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+
+        match item {
+            PlanItemType::Period => serializer.serialize_str("period"),
+            PlanItemType::Lesson => serializer.serialize_str("lesson"),
+        }
+    }
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<PlanItemType, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let value: &str = Deserialize::deserialize(deserializer)?;
+
+        Ok(match value {
+            "period" => PlanItemType::Period,
+            "lesson" => PlanItemType::Lesson,
+            _ => return Err(serde::de::Error::custom(format!("Unknown plan item type {value}")))
+        })
+        
+    }
+}
+
+pub mod hh_mm_naivedatetime_option {
+    use chrono::{NaiveDateTime, Timelike};
+    use serde::{Serializer, Deserializer, Deserialize};
+
+    pub fn serialize<S>(item: &Option<NaiveDateTime>, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        if item.is_none() {
+            return serializer.serialize_none()
+        }
+
+        let item = item.unwrap();
+
+        serializer.serialize_str(&format!("{}:{}", item.hour(), item.minute()))
+    }
+
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<NaiveDateTime>, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let value: &str = match Deserialize::deserialize(deserializer) {
+            Ok(v) => v,
+            Err(_) => return Ok(None),
+        };
+
+        match NaiveDateTime::parse_from_str(value, "%H:%M") {
+            Ok(d) => Ok(Some(d)),
+            Err(e) => Err(serde::de::Error::custom(e.to_string()))
+        }
+    }
+}
+
+pub fn none<T>() -> Option<T> {
+    None
+}
