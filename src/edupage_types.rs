@@ -269,6 +269,7 @@ pub struct Lesson {
     pub name: String
 }
 
+#[derive(Clone, Debug)]
 pub struct Timetable {
     pub lessons: Vec<Lesson>
 }
