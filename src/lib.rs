@@ -11,7 +11,9 @@ extern crate assert_matches;
 #[cfg(test)]
 mod tests {
 
-    use crate::edupage_traits::{Login, Timeline, DBI};
+    use chrono::{NaiveDateTime, Utc};
+
+    use crate::edupage_traits::{Login, Timeline, DBI, Timetable};
 
     fn get_env_var(name: &'static str) -> Option<String> {
         use std::env;
@@ -118,6 +120,8 @@ mod tests {
         let login_result = edupage.login(&subdomain, &username, &password);
         assert_matches!(login_result, Ok(_));
 
-        // edupage.get_timetable();
+        let today = Utc::now().naive_local();
+        let result = edupage.get_timetable(today.date());
+        assert_matches!(result, Ok(_));
     }
 }

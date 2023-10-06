@@ -300,7 +300,7 @@ pub enum PlanItemType {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PlanItemHeaderPart {
-    item: PlanItemHeaderItem
+    pub item: PlanItemHeaderItem
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -311,30 +311,30 @@ pub struct PlanItemHeaderItem {
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct PlanItem {
-    #[serde(rename = "classids", with = "string_i64_vec")]
-    pub class_ids: Vec<i64>,
+    #[serde(rename = "classids", with = "string_i64_vec_option", default = "none")]
+    pub class_ids: Option<Vec<i64>>,
 
-    #[serde(with = "year_month_day_optional")]
+    #[serde(with = "year_month_day_optional", default = "none")]
     pub date: Option<NaiveDate>,
 
-    #[serde(with = "plan_item_type")]
-    pub item_type: PlanItemType,
+    #[serde(with = "plan_item_type_option", default = "none")]
+    pub item_type: Option<PlanItemType>,
 
     pub header: Vec<PlanItemHeaderPart>,
 
-    #[serde(rename = "subjectid", with = "string_i64_option")]
+    #[serde(rename = "subjectid", with = "string_i64_option", default = "none")]
     pub subject_id: Option<i64>,
     
-    #[serde(rename = "teacherids", with = "string_i64_vec")]
-    pub teacher_ids: Vec<i64>,
+    #[serde(rename = "teacherids", with = "string_i64_vec_option", default = "none")]
+    pub teacher_ids: Option<Vec<i64>>,
 
-    #[serde(rename = "classroomids", with = "string_i64_vec")]
-    pub classroom_ids: Vec<i64>,
+    #[serde(rename = "classroomids", with = "string_i64_vec_option", default = "none")]
+    pub classroom_ids: Option<Vec<i64>>,
 
-    #[serde(rename = "starttime", with = "hh_mm_naivedatetime_option")]
+    #[serde(rename = "starttime", with = "hh_mm_naivedatetime_option", default = "none")]
     pub start_time: Option<NaiveDateTime>,
 
-    #[serde(rename = "endtime", with = "hh_mm_naivedatetime_option")]
+    #[serde(rename = "endtime", with = "hh_mm_naivedatetime_option", default = "none")]
     pub end_time: Option<NaiveDateTime>,
 
     #[serde(rename = "ol_url")]

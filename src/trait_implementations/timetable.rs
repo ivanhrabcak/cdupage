@@ -1,19 +1,105 @@
-use std::any::Any;
 use std::collections::HashMap;
-use std::fmt::format;
 use chrono::{NaiveDate, NaiveDateTime, Utc};
 use common_macros::hash_map;
 use reqwest::Error;
-use reqwest::blocking::Response;
 use serde::{Deserialize, Serialize};
 use crate::edupage::{Edupage, EdupageError, RequestType};
 use crate::edupage::RequestType::POST;
-use crate::edupage_traits::Timetable;
-use crate::edupage_types::{Lesson, Timetable as EduTimetable};
+use crate::edupage_traits::{Timetable, DBI};
+use crate::edupage_types::{Lesson, Timetable as EduTimetable, Teacher, DBIBase};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct OnlineLessonErrorLoginResponse {
     pub reload: bool
+}
+
+impl Timetable for Edupage {
+    fn get_timetable(&self, date: NaiveDate) -> Result<EduTimetable, EdupageError> {
+        if !self.is_logged_in {
+            return Err(EdupageError::NotLoggedIn)
+        }
+
+        if self.data.is_none() {
+            return Err(EdupageError::NotLoggedIn)
+        }
+
+
+        let dp = self.data.clone().unwrap().dp;
+
+        let ymd = date.format("%Y-%m-%d").to_string();
+        let plan = dp.dates.get(&ymd);
+
+        if plan.is_none() {
+            return Err(EdupageError::MissingData)
+        }
+
+        let plan = plan.unwrap();
+        
+        let mut lessons: Vec<Lesson> = Vec::new();
+        for plan_item in plan.plan_items.clone().into_iter() {
+            if plan_item.header.len() == 0 {
+                continue
+            }
+
+            let teachers: Vec<Teacher> = if plan_item.teacher_ids.is_some() {
+                let ts = plan_item.teacher_ids.unwrap();
+                ts.iter()
+                    .map(|t| self.get_teacher_by_id(*t))
+                    .filter(|t| t.is_ok())
+                    .map(|t: Result<Option<Teacher>, EdupageError>| t.unwrap())
+                    .filter(|t| t.is_some())
+                    .map(|t| t.unwrap())
+                    .collect()
+            } else {
+                Vec::new()
+            };
+
+            let classrooms: Vec<DBIBase> = if plan_item.classroom_ids.is_some() {
+                let cls_rooms = plan_item.classroom_ids.unwrap();
+                cls_rooms.iter()
+                    .map(|c| self.get_classroom_by_id(*c))
+                    .filter(|c| c.is_ok())
+                    .map(|c: Result<Option<DBIBase>, EdupageError>| c.unwrap())
+                    .filter(|c| c.is_some())
+                    .map(|c| c.unwrap())
+                    .collect()
+            } else {
+                Vec::new()
+            };
+
+            let subject_id = plan_item.header[0].item.subject_id.unwrap();
+            let subject = match self.get_subject_by_id(subject_id) {
+                Ok(s) => s,
+                Err(e) => return Err(e)
+            };
+
+
+            let subject_name = match subject {
+                Some(s) => s.name,
+                None => return Err(EdupageError::MissingData)
+            };
+
+            lessons.push(
+                Lesson { 
+                    teachers: teachers, 
+                    classrooms: classrooms, 
+                    start_of_lesson: plan_item.start_time.unwrap(), 
+                    end_of_lesson: plan_item.end_time.unwrap(), 
+                    online_lesson_link: plan_item.online_link, 
+                    subject_id: plan_item.subject_id.unwrap(), 
+                    name: subject_name
+                }
+            )
+        }
+
+        return Ok(
+            EduTimetable {
+                lessons
+            }
+        )
+
+        
+    }
 }
 
 impl Lesson {
@@ -56,8 +142,6 @@ impl Lesson {
             &self.subject_id,
             gsec_hash
         );
-
-        println!("{post_data}");
 
         let response = edupage.request(
             request_url,

@@ -67,7 +67,6 @@ impl Login for Edupage {
             csrf_token.to_string(),
         );
 
-        println!("{:?}", login_credentials);
         let post_data = match serde_urlencoded::to_string(&login_credentials) {
             Ok(x) => x,
             Err(e) => return Err(EdupageError::SerializationError(e.to_string())),
