@@ -342,7 +342,7 @@ pub struct PlanItem {
     
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Timetable {
     pub lessons: Vec<Lesson>
 }

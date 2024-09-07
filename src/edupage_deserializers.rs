@@ -380,7 +380,7 @@ pub mod year_month_day_optional {
 }
 
 pub mod javascript_date_format_option {
-    use chrono::{DateTime, TimeZone, Utc};
+    use chrono::{DateTime, Utc};
     use serde::{self, Deserialize, Deserializer, Serializer};
 
     const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S";
@@ -408,11 +408,10 @@ pub mod javascript_date_format_option {
             return Ok(None);
         }
         let s = s.unwrap();
-        match Utc
-            .datetime_from_str(&s, FORMAT)
+        match DateTime::parse_from_str(&s, FORMAT)
             .map_err(serde::de::Error::custom)
         {
-            Ok(x) => Ok(Some(x)),
+            Ok(x) => Ok(Some(x.into())),
             Err(e) => Err(e),
         }
     }

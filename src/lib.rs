@@ -4,9 +4,14 @@ pub mod edupage_traits;
 pub mod edupage_types;
 pub mod trait_implementations;
 
+// todo: separate to a feature
+pub mod node;
+
 #[cfg(test)]
 #[macro_use]
 extern crate assert_matches;
+
+// #[macro_use] extern crate tslink;
 
 #[cfg(test)]
 mod tests {

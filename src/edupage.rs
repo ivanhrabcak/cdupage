@@ -4,6 +4,7 @@ use reqwest::{
     blocking::{Client, Response},
     header::{HeaderMap, HeaderName, HeaderValue},
 };
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 use crate::edupage_types::UserData;
@@ -17,7 +18,7 @@ pub struct Edupage {
     pub(crate) subdomain: Option<String>
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum EdupageError {
     InvalidCredentials,
     HTTPError(String),
@@ -34,12 +35,16 @@ pub enum RequestType {
 }
 
 impl Edupage {
-    pub fn new() -> Self {
-        let client = Client::builder()
+    pub fn build_client() -> reqwest::blocking::Client {
+        Client::builder()
             .connection_verbose(true)
             .cookie_store(true)
             .build()
-            .unwrap();
+            .unwrap()
+    }
+
+    pub fn new() -> Self {
+        let client = Self::build_client();
 
         Self {
             is_logged_in: false,
