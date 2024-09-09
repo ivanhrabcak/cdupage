@@ -15,6 +15,11 @@ pub mod person;
 pub mod timeline;
 pub mod timetable;
 
+pub use dbi::*;
+pub use person::*;
+pub use timeline::*;
+pub use timetable::*;
+
 #[cfg(feature = "node-types")]
 use ts_rs::TS;
 

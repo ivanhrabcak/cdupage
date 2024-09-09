@@ -9,10 +9,10 @@ use serde_json::Value;
 // use tslink::tslink;
 use crate::{
     edupage::{Edupage as IEdupage, EdupageError},
-    edupage_traits::{Login, Ringing, Timeline, Timetable, DBI},
-    edupage_types::{
+    traits::{Login, Ringing, Timeline, Timetable, DBI},
+    types::{
         DBIBase, RingingTime, Student, Teacher, TimelineItem, TimelineItemType,
-        Timetable as EduTimetable, UserData,
+        Timetable as EduTimetable,
     },
 };
 
