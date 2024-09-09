@@ -14,7 +14,7 @@ extern crate assert_matches;
 #[cfg(test)]
 mod tests {
 
-    use chrono::{NaiveDateTime, Utc};
+    use chrono::Utc;
 
     use crate::edupage_traits::{Login, Timeline, Timetable, DBI};
 
