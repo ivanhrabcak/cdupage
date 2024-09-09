@@ -38,6 +38,6 @@ impl Ringing for Edupage {
             }
         }
 
-        return None;
+        None
     }
 }

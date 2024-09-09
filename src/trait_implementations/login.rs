@@ -27,16 +27,16 @@ impl LoginCredentials {
 impl Login for Edupage {
     fn login(
         &mut self,
-        subdomain: &String,
-        username: &String,
-        password: &String,
+        subdomain: &str,
+        username: &str,
+        password: &str,
     ) -> Result<(), EdupageError> {
         let url = format!("https://{}.edupage.org/login/index.php", subdomain);
 
         let result = self.request(url, RequestType::GET, None, None);
 
-        if result.is_err() {
-            return Err(EdupageError::HTTPError(result.unwrap_err().to_string()));
+        if let Err(error) = result {
+            return Err(EdupageError::HTTPError(error.to_string()));
         }
 
         let result = result.unwrap();
@@ -83,8 +83,8 @@ impl Login for Edupage {
             Some(post_data),
         );
 
-        if result.is_err() {
-            return Err(EdupageError::HTTPError(result.unwrap_err().to_string()));
+        if let Err(error) = result {
+            return Err(EdupageError::HTTPError(error.to_string()));
         }
 
         let result = result.unwrap();

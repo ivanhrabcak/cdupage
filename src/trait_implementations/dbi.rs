@@ -32,7 +32,7 @@ impl DBI for Edupage {
             }
         }
 
-        return Ok(None);
+        Ok(None)
     }
 
     fn get_students(

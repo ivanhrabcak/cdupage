@@ -41,7 +41,7 @@ mod tests {
         let username = get_env_var("USERNAME");
         let password = get_env_var("PASSWORD");
 
-        if vec![&subdomain, &username, &password].contains(&&None) {
+        if [&subdomain, &username, &password].contains(&&None) {
             debug_assert_ne!(subdomain, None);
             debug_assert_ne!(username, None);
             debug_assert_ne!(password, None);
@@ -57,7 +57,7 @@ mod tests {
 
         assert_matches!(login_result, Ok(_));
 
-        assert_eq!(edupage.logged_in(), true);
+        assert!(edupage.logged_in());
     }
 
     #[test]
@@ -70,7 +70,7 @@ mod tests {
         let username = get_env_var("USERNAME");
         let password = get_env_var("PASSWORD");
 
-        if vec![&subdomain, &username, &password].contains(&&None) {
+        if [&subdomain, &username, &password].contains(&&None) {
             debug_assert_ne!(subdomain, None);
             debug_assert_ne!(username, None);
             debug_assert_ne!(password, None);
@@ -113,7 +113,7 @@ mod tests {
         let username = get_env_var("USERNAME");
         let password = get_env_var("PASSWORD");
 
-        if vec![&subdomain, &username, &password].contains(&&None) {
+        if [&subdomain, &username, &password].contains(&&None) {
             debug_assert_ne!(subdomain, None);
             debug_assert_ne!(username, None);
             debug_assert_ne!(password, None);

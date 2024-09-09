@@ -12,7 +12,7 @@ impl Substitution for Edupage {
     fn get_substitution_html(
         &self,
         date: &NaiveDate,
-        subdomain: &String,
+        subdomain: &str,
     ) -> Result<String, EdupageError> {
         let url = format!(
             "https://{}.edupage.org/substitution/server/viewer.js?__func=getSubstViewerDayDataHtml",

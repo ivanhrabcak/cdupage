@@ -9,9 +9,9 @@ use serde::{Deserialize, Serialize};
 pub trait Login {
     fn login(
         &mut self,
-        subdomain: &String,
-        username: &String,
-        password: &String,
+        subdomain: &str,
+        username: &str,
+        password: &str,
     ) -> Result<(), EdupageError>;
 }
 
@@ -48,7 +48,7 @@ pub trait Substitution {
     fn get_substitution_html(
         &self,
         date: &NaiveDate,
-        subdomain: &String,
+        subdomain: &str,
     ) -> Result<String, EdupageError>;
 }
 

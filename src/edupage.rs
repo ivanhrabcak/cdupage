@@ -34,6 +34,12 @@ pub enum RequestType {
     POST,
 }
 
+impl Default for Edupage {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Edupage {
     pub fn build_client() -> reqwest::blocking::Client {
         Client::builder()

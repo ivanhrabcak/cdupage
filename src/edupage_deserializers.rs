@@ -5,7 +5,7 @@ use serde_json::{Map, Value};
 
 use crate::edupage_types::{dbi::DBIBase, timeline::TimelineItemType, UserID};
 
-pub const TIMELINE_ITEM_TYPE_NAMES: [&'static str; 19] = [
+pub const TIMELINE_ITEM_TYPE_NAMES: [&str; 19] = [
     "news",
     "sprava",
     "h_dailyplan",
@@ -97,9 +97,9 @@ pub mod gender {
     where
         S: Serializer,
     {
-        serializer.serialize_str(match gender {
-            &Gender::Male => "M",
-            &Gender::Female => "F",
+        serializer.serialize_str(match *gender {
+            Gender::Male => "M",
+            Gender::Female => "F",
         })
     }
 
@@ -254,10 +254,10 @@ impl<'de> Deserialize<'de> for UserID {
 
         let user_id = parse_userid(s);
         if user_id.is_none() {
-            return Err(serde::de::Error::custom(format!("Unexpected user type")));
+            return Err(serde::de::Error::custom("Unexpected user type".to_string()));
         }
 
-        return Ok(user_id.unwrap());
+        Ok(user_id.unwrap())
     }
 }
 
@@ -340,7 +340,7 @@ pub mod year_month_day_optional {
     use chrono::NaiveDate;
     use serde::{self, Deserialize, Deserializer, Serializer};
 
-    const FORMAT: &'static str = "%Y-%m-%d";
+    const FORMAT: &str = "%Y-%m-%d";
 
     pub fn serialize<S>(date: &Option<NaiveDate>, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -384,7 +384,7 @@ pub mod javascript_date_format_option {
     use chrono::NaiveDateTime;
     use serde::{self, Deserialize, Deserializer, Serializer};
 
-    const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S";
+    const FORMAT: &str = "%Y-%m-%d %H:%M:%S";
 
     pub fn serialize<S>(date: &Option<NaiveDateTime>, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -465,12 +465,12 @@ pub mod string_i64_vec_option {
     {
         let s: Option<Vec<String>> = Deserialize::deserialize(deserializer)?;
 
-        if let None = s {
+        if s.is_none() {
             return Ok(None);
         }
 
         let seq = s.unwrap();
-        if seq.len() == 0 {
+        if seq.is_empty() {
             return Ok(Some(Vec::new()));
         }
 
