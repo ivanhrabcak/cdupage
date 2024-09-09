@@ -1,4 +1,8 @@
-use crate::{edupage::EdupageError, edupage_types::Timetable as EduTimetable, edupage_types::*};
+use crate::{
+    edupage::EdupageError, edupage_types::dbi::*, edupage_types::person::*,
+    edupage_types::timeline::*, edupage_types::timetable::Timetable as EduTimetable,
+    edupage_types::RingingTime,
+};
 use chrono::{NaiveDate, NaiveDateTime};
 use serde::{Deserialize, Serialize};
 

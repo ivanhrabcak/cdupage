@@ -3,7 +3,7 @@ use num_enum::TryFromPrimitiveError;
 use serde::{de::DeserializeOwned, ser, Deserialize, Deserializer, Serialize};
 use serde_json::{Map, Value};
 
-use crate::edupage_types::{DBIBase, TimelineItemType, UserID};
+use crate::edupage_types::{dbi::DBIBase, timeline::TimelineItemType, UserID};
 
 pub const TIMELINE_ITEM_TYPE_NAMES: [&'static str; 19] = [
     "news",
@@ -56,7 +56,7 @@ impl TimelineItemType {
 pub mod timeline_item_type {
     use serde::{self, Deserialize, Deserializer, Serializer};
 
-    use crate::edupage_types::TimelineItemType;
+    use crate::edupage_types::timeline::TimelineItemType;
 
     use super::TIMELINE_ITEM_TYPE_NAMES;
 
@@ -91,7 +91,7 @@ pub mod timeline_item_type {
 pub mod gender {
     use serde::{self, Deserialize, Deserializer, Serializer};
 
-    use crate::edupage_types::Gender;
+    use crate::edupage_types::dbi::Gender;
 
     pub fn serialize<S>(gender: &Gender, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -125,7 +125,7 @@ pub mod gender_option {
 
     use serde::{self, Deserialize, Deserializer, Serializer};
 
-    use crate::edupage_types::Gender;
+    use crate::edupage_types::dbi::Gender;
 
     pub fn serialize<S>(gender: &Option<Gender>, serializer: S) -> Result<S::Ok, S::Error>
     where
@@ -316,6 +316,7 @@ where
 {
     #[derive(Deserialize)]
     #[serde(untagged)]
+    #[allow(dead_code)]
     enum MapOrVec<T> {
         Map(Map<String, Value>),
         Vec(Vec<T>),
@@ -490,7 +491,7 @@ pub mod string_i64_vec_option {
 pub mod plan_item_type_option {
     use serde::{Deserialize, Deserializer, Serializer};
 
-    use crate::edupage_types::PlanItemType;
+    use crate::edupage_types::timetable::PlanItemType;
 
     pub fn serialize<S>(item: &Option<PlanItemType>, serializer: S) -> Result<S::Ok, S::Error>
     where

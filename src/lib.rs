@@ -2,10 +2,14 @@ pub mod edupage;
 pub mod edupage_deserializers;
 pub mod edupage_traits;
 pub mod edupage_types;
+mod macro_aliases;
 pub mod trait_implementations;
 
 #[cfg(feature = "node")]
 pub mod node;
+
+#[macro_use]
+extern crate macro_rules_attribute;
 
 #[cfg(test)]
 #[macro_use]
@@ -81,8 +85,9 @@ mod tests {
         let login_result = edupage.login(&subdomain, &username, &password);
         assert_matches!(login_result, Ok(_));
 
-        let homework =
-            edupage.filter_timeline_by_item_type(crate::edupage_types::TimelineItemType::Homework);
+        let homework = edupage.filter_timeline_by_item_type(
+            crate::edupage_types::timeline::TimelineItemType::Homework,
+        );
         assert_matches!(homework, Ok(_));
 
         let teachers = edupage.get_teachers();

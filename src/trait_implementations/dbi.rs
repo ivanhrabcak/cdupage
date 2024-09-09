@@ -6,7 +6,7 @@ use crate::{
 impl DBI for Edupage {
     fn get_teachers(
         &self,
-    ) -> Result<Vec<crate::edupage_types::Teacher>, crate::edupage::EdupageError> {
+    ) -> Result<Vec<crate::edupage_types::person::Teacher>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
             return Err(EdupageError::NotLoggedIn);
         }
@@ -19,7 +19,7 @@ impl DBI for Edupage {
     fn get_teacher_by_id(
         &self,
         id: i64,
-    ) -> Result<Option<crate::edupage_types::Teacher>, crate::edupage::EdupageError> {
+    ) -> Result<Option<crate::edupage_types::person::Teacher>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
             return Err(EdupageError::NotLoggedIn);
         }
@@ -37,7 +37,7 @@ impl DBI for Edupage {
 
     fn get_students(
         &self,
-    ) -> Result<Vec<crate::edupage_types::Student>, crate::edupage::EdupageError> {
+    ) -> Result<Vec<crate::edupage_types::person::Student>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
             return Err(EdupageError::NotLoggedIn);
         }
@@ -50,7 +50,7 @@ impl DBI for Edupage {
     fn get_student_by_id(
         &self,
         id: i64,
-    ) -> Result<Option<crate::edupage_types::Student>, crate::edupage::EdupageError> {
+    ) -> Result<Option<crate::edupage_types::person::Student>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
             return Err(EdupageError::NotLoggedIn);
         }
@@ -68,7 +68,7 @@ impl DBI for Edupage {
 
     fn get_subjects(
         &self,
-    ) -> Result<Vec<crate::edupage_types::DBIBase>, crate::edupage::EdupageError> {
+    ) -> Result<Vec<crate::edupage_types::dbi::DBIBase>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
             return Err(EdupageError::NotLoggedIn);
         }
@@ -81,7 +81,7 @@ impl DBI for Edupage {
     fn get_subject_by_id(
         &self,
         id: i64,
-    ) -> Result<Option<crate::edupage_types::DBIBase>, crate::edupage::EdupageError> {
+    ) -> Result<Option<crate::edupage_types::dbi::DBIBase>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
             return Err(EdupageError::NotLoggedIn);
         }
@@ -99,7 +99,7 @@ impl DBI for Edupage {
 
     fn get_classrooms(
         &self,
-    ) -> Result<Vec<crate::edupage_types::DBIBase>, crate::edupage::EdupageError> {
+    ) -> Result<Vec<crate::edupage_types::dbi::DBIBase>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
             return Err(EdupageError::NotLoggedIn);
         }
@@ -112,7 +112,7 @@ impl DBI for Edupage {
     fn get_classroom_by_id(
         &self,
         id: i64,
-    ) -> Result<Option<crate::edupage_types::DBIBase>, crate::edupage::EdupageError> {
+    ) -> Result<Option<crate::edupage_types::dbi::DBIBase>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
             return Err(EdupageError::NotLoggedIn);
         }

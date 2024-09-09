@@ -111,7 +111,7 @@ impl Edupage {
 
         File::create("dump.json")
             .unwrap()
-            .write(json.as_bytes())
+            .write_all(json.as_bytes())
             .unwrap();
 
         self.data = Some(match serde_json::from_str(&json) {

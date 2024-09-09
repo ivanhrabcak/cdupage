@@ -1,7 +1,9 @@
 use crate::edupage::RequestType::POST;
 use crate::edupage::{Edupage, EdupageError, RequestType};
 use crate::edupage_traits::{Timetable, DBI};
-use crate::edupage_types::{DBIBase, Lesson, Teacher, Timetable as EduTimetable};
+use crate::edupage_types::{
+    dbi::DBIBase, person::Teacher, timetable::Lesson, timetable::Timetable as EduTimetable,
+};
 use chrono::{NaiveDate, NaiveDateTime, Utc};
 use common_macros::hash_map;
 use reqwest::Error;
@@ -69,7 +71,12 @@ impl Timetable for Edupage {
                 Vec::new()
             };
 
-            let subject_id = plan_item.header[0].item.clone().unwrap().subject_id.unwrap();
+            let subject_id = plan_item.header[0]
+                .item
+                .clone()
+                .unwrap()
+                .subject_id
+                .unwrap();
             let subject = match self.get_subject_by_id(subject_id) {
                 Ok(s) => s,
                 Err(e) => return Err(e),

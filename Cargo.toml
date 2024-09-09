@@ -31,3 +31,6 @@ crate-type = ["lib", "dylib"]
 default = []
 node-types = ["dep:ts-rs"]
 node = ["dep:node-bindgen"]
+
+[dependencies]
+macro_rules_attribute = "0.2.0"
