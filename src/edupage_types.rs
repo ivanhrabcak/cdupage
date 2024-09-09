@@ -7,7 +7,16 @@ use serde_aux::prelude::*;
 
 use crate::edupage_deserializers::*;
 
+#[cfg(feature = "node-types")]
+use ts_rs::TS;
+
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub enum Gender {
     Male,
     Female,
@@ -15,6 +24,12 @@ pub enum Gender {
 
 #[derive(
     Serialize, Deserialize, Debug, IntoPrimitive, TryFromPrimitive, PartialEq, Clone, Copy,
+)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
 )]
 #[repr(usize)]
 pub enum TimelineItemType {
@@ -41,6 +56,12 @@ pub enum TimelineItemType {
 }
 
 #[derive(Debug, Copy, Clone)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub enum UserID {
     Teacher(i64),
     Student(i64),
@@ -58,56 +79,90 @@ pub enum UserID {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub struct TimelineItem {
-    #[serde(rename = "user")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "user"))]
     pub user: UserID,
 
-    #[serde(rename = "cas_pridania", with = "javascript_date_format_option")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "cas_pridania", with = "javascript_date_format_option")
+    )]
+    #[cfg_attr(feature = "node-types", ts(as = "Option<DateTime<Utc>>"))]
     pub time_added: Option<DateTime<Utc>>,
 
-    #[serde(rename = "cas_pridania_btc", with = "javascript_date_format_option")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "cas_pridania_btc", with = "javascript_date_format_option")
+    )]
     pub time_added_btc: Option<DateTime<Utc>>,
 
-    #[serde(rename = "cas_udalosti", with = "javascript_date_format_option")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "cas_udalosti", with = "javascript_date_format_option")
+    )]
     pub time_of_event: Option<DateTime<Utc>>,
 
-    #[serde(rename = "data")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "data"))]
     pub additional_data: String,
 
-    #[serde(
-        rename = "pocet_reakcii",
-        deserialize_with = "deserialize_number_from_string"
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(
+            rename = "pocet_reakcii",
+            deserialize_with = "deserialize_number_from_string"
+        )
     )]
     pub reactions_n: i64,
 
-    #[serde(rename = "target_user")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "target_user"))]
     pub target_user: Option<UserID>,
 
-    #[serde(rename = "typ", with = "timeline_item_type")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "typ", with = "timeline_item_type")
+    )]
     pub item_type: TimelineItemType,
 
-    #[serde(
-        rename = "timelineid",
-        deserialize_with = "deserialize_number_from_string"
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(
+            rename = "timelineid",
+            deserialize_with = "deserialize_number_from_string"
+        )
     )]
     pub timeline_id: i64,
 
     #[serde(with = "javascript_date_format_option")]
     pub timestamp: Option<DateTime<Utc>>,
 
-    #[serde(rename = "reakcia_na", with = "string_i64_option")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "reakcia_na", with = "string_i64_option")
+    )]
     pub reaction_to: Option<i64>,
 
     pub text: String,
 
-    #[serde(rename = "user_meno")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "user_meno"))]
     pub user_name: String,
 
-    #[serde(rename = "vlastnik")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "vlastnik"))]
     pub owner: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub struct DBI {
     #[serde(deserialize_with = "deserialize_dbi_base")]
     pub teachers: Vec<Teacher>,
@@ -127,39 +182,51 @@ pub struct DBI {
     #[serde(deserialize_with = "deserialize_dbi_base")]
     pub parents: Vec<Parent>,
 
-    #[serde(rename = "jeZUS")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "jeZUS"))]
     pub is_art_school: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub struct UserData {
     pub items: Vec<TimelineItem>,
     pub dbi: DBI,
 
-    #[serde(rename = "meninyDnes")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "meninyDnes"))]
     pub nameday_today: String,
 
-    #[serde(rename = "meninyZajtra")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "meninyZajtra"))]
     pub nameday_tomorrow: String,
 
-    #[serde(rename = "userid")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "userid"))]
     pub user_id: UserID,
 
-    #[serde(rename = "zvonenia")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "zvonenia"))]
     pub ringing_times: Vec<RingingTime>,
 
-    pub dp: DP
+    pub dp: DP,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub struct Teacher {
     #[serde(with = "string_i64_option")]
     pub id: Option<i64>,
 
-    #[serde(rename = "firstname")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "firstname"))]
     pub first_name: String,
 
-    #[serde(rename = "lastname")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "lastname"))]
     pub last_name: String,
 
     pub short: String,
@@ -167,20 +234,35 @@ pub struct Teacher {
     #[serde(with = "gender_option")]
     pub gender: Option<Gender>,
 
-    #[serde(rename = "classroomid", with = "string_i64_option")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "classroomid", with = "string_i64_option")
+    )]
     pub classroom_id: Option<i64>,
 
-    #[serde(rename = "isOut")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "isOut"))]
     pub is_out: bool,
 
-    #[serde(rename = "datefrom", with = "year_month_day_optional")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "datefrom", with = "year_month_day_optional")
+    )]
     pub date_from: Option<NaiveDate>,
 
-    #[serde(rename = "dateto", with = "year_month_day_optional")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "dateto", with = "year_month_day_optional")
+    )]
     pub date_to: Option<NaiveDate>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub struct Class {
     #[serde(with = "string_i64_option")]
     pub id: Option<i64>,
@@ -191,61 +273,103 @@ pub struct Class {
     #[serde(with = "string_i64_option")]
     pub grade: Option<i64>,
 
-    #[serde(rename = "teacherid", with = "string_i64_option")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "teacherid", with = "string_i64_option")
+    )]
     pub first_teacher_id: Option<i64>,
 
-    #[serde(rename = "teacher2id", with = "string_i64_option")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "teacher2id", with = "string_i64_option")
+    )]
     pub second_teacher_id: Option<i64>,
 
-    #[serde(rename = "classroomid", with = "string_i64_option")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "classroomid", with = "string_i64_option")
+    )]
     pub classroom_id: Option<i64>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub struct Student {
     #[serde(with = "string_i64_option")]
     pub id: Option<i64>,
 
-    #[serde(rename = "classid", with = "string_i64_option")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "classid", with = "string_i64_option")
+    )]
     pub class_id: Option<i64>,
 
-    #[serde(rename = "firstname")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "firstname"))]
     pub first_name: String,
 
-    #[serde(rename = "lastname")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "lastname"))]
     pub last_name: String,
 
-    #[serde(rename = "parent1id", with = "string_i64_option")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "parent1id", with = "string_i64_option")
+    )]
     pub first_parent_id: Option<i64>,
 
-    #[serde(rename = "parent2id", with = "string_i64_option")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "parent2id", with = "string_i64_option")
+    )]
     pub second_parent_id: Option<i64>,
 
-    #[serde(rename = "parent3id", with = "string_i64_option")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "parent3id", with = "string_i64_option")
+    )]
     pub third_parent_id: Option<i64>, // what the fuck
 
     #[serde(with = "gender_option")]
     pub gender: Option<Gender>,
 
-    #[serde(rename = "datefrom", with = "year_month_day_optional")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "datefrom", with = "year_month_day_optional")
+    )]
     pub date_from: Option<NaiveDate>,
 
-    #[serde(rename = "dateto", with = "year_month_day_optional")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "dateto", with = "year_month_day_optional")
+    )]
     pub date_to: Option<NaiveDate>,
 
-    #[serde(rename = "numberinclass", with = "string_i64_option")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "numberinclass", with = "string_i64_option")
+    )]
     pub number_in_class: Option<i64>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub struct Parent {
     #[serde(with = "string_i64_option")]
     pub id: Option<i64>,
 
-    #[serde(rename = "firstname")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "firstname"))]
     pub first_name: String,
 
-    #[serde(rename = "lastname")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "lastname"))]
     pub last_name: String,
 
     #[serde(with = "gender_option")]
@@ -254,6 +378,12 @@ pub struct Parent {
 
 // only the base properties a lot dbi entries have in common
 #[derive(Deserialize, Debug, Clone)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub struct DBIBase {
     #[serde(with = "string_i64_option")]
     pub id: Option<i64>,
@@ -263,6 +393,12 @@ pub struct DBIBase {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub struct Lesson {
     pub teachers: Vec<Teacher>,
     pub classrooms: Vec<DBIBase>,
@@ -270,48 +406,91 @@ pub struct Lesson {
     pub end_of_lesson: NaiveDateTime,
     pub online_lesson_link: Option<String>,
     pub subject_id: i64,
-    pub name: String
+    pub name: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub struct DP {
     pub dates: HashMap<String, Plan>,
 
-    #[serde(rename = "year")]
-    pub school_year: i32
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "year"))]
+    pub school_year: i32,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub struct Plan {
-    #[serde(rename = "tt_day")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "tt_day"))]
     pub day: i32,
 
-    #[serde(rename = "plan")]
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "plan"))]
     pub plan_items: Vec<PlanItem>,
 
-    #[serde(rename = "tt_week")]
-    pub week: i32
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "tt_week"))]
+    pub week: i32,
 }
 
 #[derive(Debug, Clone, Copy)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub enum PlanItemType {
-    Period, Lesson
+    Period,
+    Lesson,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub struct PlanItemHeaderPart {
-    pub item: PlanItemHeaderItem
+    pub item: PlanItemHeaderItem,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub struct PlanItemHeaderItem {
-    #[serde(rename = "subjectid", with = "string_i64_option")]
-    pub subject_id: Option<i64>
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "subjectid", with = "string_i64_option")
+    )]
+    pub subject_id: Option<i64>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub struct PlanItem {
-    #[serde(rename = "classids", with = "string_i64_vec_option", default = "none")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "classids", with = "string_i64_vec_option", default = "none")
+    )]
     pub class_ids: Option<Vec<i64>>,
 
     #[serde(with = "year_month_day_optional", default = "none")]
@@ -322,39 +501,87 @@ pub struct PlanItem {
 
     pub header: Vec<PlanItemHeaderPart>,
 
-    #[serde(rename = "subjectid", with = "string_i64_option", default = "none")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "subjectid", with = "string_i64_option", default = "none")
+    )]
     pub subject_id: Option<i64>,
-    
-    #[serde(rename = "teacherids", with = "string_i64_vec_option", default = "none")]
+
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(
+            rename = "teacherids",
+            with = "string_i64_vec_option",
+            default = "none"
+        )
+    )]
     pub teacher_ids: Option<Vec<i64>>,
 
-    #[serde(rename = "classroomids", with = "string_i64_vec_option", default = "none")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(
+            rename = "classroomids",
+            with = "string_i64_vec_option",
+            default = "none"
+        )
+    )]
     pub classroom_ids: Option<Vec<i64>>,
 
-    #[serde(rename = "starttime", with = "hh_mm_naivedatetime_option", default = "none")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(
+            rename = "starttime",
+            with = "hh_mm_naivedatetime_option",
+            default = "none"
+        )
+    )]
     pub start_time: Option<NaiveDateTime>,
 
-    #[serde(rename = "endtime", with = "hh_mm_naivedatetime_option", default = "none")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(
+            rename = "endtime",
+            with = "hh_mm_naivedatetime_option",
+            default = "none"
+        )
+    )]
     pub end_time: Option<NaiveDateTime>,
 
-    #[serde(rename = "ol_url")]
-    pub online_link: Option<String>
-    
+    #[cfg_attr(not(feature = "node-types"), serde(rename = "ol_url"))]
+    pub online_link: Option<String>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub struct Timetable {
-    pub lessons: Vec<Lesson>
+    pub lessons: Vec<Lesson>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+#[cfg_attr(
+    feature = "node-types",
+    derive(TS),
+    ts(export),
+    ts(rename_all = "camelCase")
+)]
 pub struct RingingTime {
     #[serde(deserialize_with = "deserialize_number_from_string")]
     pub name: i64,
 
-    #[serde(rename = "starttime", deserialize_with = "deserialize_time")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "starttime", deserialize_with = "deserialize_time")
+    )]
     pub start_time: NaiveDateTime,
 
-    #[serde(rename = "endtime", deserialize_with = "deserialize_time")]
+    #[cfg_attr(
+        not(feature = "node-types"),
+        serde(rename = "endtime", deserialize_with = "deserialize_time")
+    )]
     pub end_time: NaiveDateTime,
 }

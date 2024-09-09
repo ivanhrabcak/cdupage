@@ -4,21 +4,19 @@ pub mod edupage_traits;
 pub mod edupage_types;
 pub mod trait_implementations;
 
-// todo: separate to a feature
+#[cfg(feature = "node")]
 pub mod node;
 
 #[cfg(test)]
 #[macro_use]
 extern crate assert_matches;
 
-// #[macro_use] extern crate tslink;
-
 #[cfg(test)]
 mod tests {
 
     use chrono::{NaiveDateTime, Utc};
 
-    use crate::edupage_traits::{Login, Timeline, DBI, Timetable};
+    use crate::edupage_traits::{Login, Timeline, Timetable, DBI};
 
     fn get_env_var(name: &'static str) -> Option<String> {
         use std::env;

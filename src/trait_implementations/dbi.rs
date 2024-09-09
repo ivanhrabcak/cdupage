@@ -1,9 +1,14 @@
-use crate::{edupage_traits::DBI, edupage::{Edupage, EdupageError}};
+use crate::{
+    edupage::{Edupage, EdupageError},
+    edupage_traits::DBI,
+};
 
 impl DBI for Edupage {
-    fn get_teachers(&self) -> Result<Vec<crate::edupage_types::Teacher>, crate::edupage::EdupageError> {
+    fn get_teachers(
+        &self,
+    ) -> Result<Vec<crate::edupage_types::Teacher>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
-            return Err(EdupageError::NotLoggedIn)
+            return Err(EdupageError::NotLoggedIn);
         }
 
         let data = self.data.as_ref().unwrap();
@@ -11,9 +16,12 @@ impl DBI for Edupage {
         Ok(data.dbi.teachers.clone())
     }
 
-    fn get_teacher_by_id(&self, id: i64) -> Result<Option<crate::edupage_types::Teacher>, crate::edupage::EdupageError> {
+    fn get_teacher_by_id(
+        &self,
+        id: i64,
+    ) -> Result<Option<crate::edupage_types::Teacher>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
-            return Err(EdupageError::NotLoggedIn)
+            return Err(EdupageError::NotLoggedIn);
         }
 
         let data = self.data.as_ref().unwrap();
@@ -27,9 +35,11 @@ impl DBI for Edupage {
         return Ok(None);
     }
 
-    fn get_students(&self) -> Result<Vec<crate::edupage_types::Student>, crate::edupage::EdupageError> {
+    fn get_students(
+        &self,
+    ) -> Result<Vec<crate::edupage_types::Student>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
-            return Err(EdupageError::NotLoggedIn)
+            return Err(EdupageError::NotLoggedIn);
         }
 
         let data = self.data.as_ref().unwrap();
@@ -37,9 +47,12 @@ impl DBI for Edupage {
         Ok(data.dbi.students.clone())
     }
 
-    fn get_student_by_id(&self, id: i64) -> Result<Option<crate::edupage_types::Student>, crate::edupage::EdupageError> {
+    fn get_student_by_id(
+        &self,
+        id: i64,
+    ) -> Result<Option<crate::edupage_types::Student>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
-            return Err(EdupageError::NotLoggedIn)
+            return Err(EdupageError::NotLoggedIn);
         }
 
         let data = self.data.as_ref().unwrap();
@@ -53,9 +66,11 @@ impl DBI for Edupage {
         Ok(None)
     }
 
-    fn get_subjects(&self) -> Result<Vec<crate::edupage_types::DBIBase>, crate::edupage::EdupageError> {
+    fn get_subjects(
+        &self,
+    ) -> Result<Vec<crate::edupage_types::DBIBase>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
-            return Err(EdupageError::NotLoggedIn)
+            return Err(EdupageError::NotLoggedIn);
         }
 
         let data = self.data.as_ref().unwrap();
@@ -63,9 +78,12 @@ impl DBI for Edupage {
         Ok(data.dbi.subjects.clone())
     }
 
-    fn get_subject_by_id(&self, id: i64) -> Result<Option<crate::edupage_types::DBIBase>, crate::edupage::EdupageError> {
+    fn get_subject_by_id(
+        &self,
+        id: i64,
+    ) -> Result<Option<crate::edupage_types::DBIBase>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
-            return Err(EdupageError::NotLoggedIn)
+            return Err(EdupageError::NotLoggedIn);
         }
 
         let data = self.data.as_ref().unwrap();
@@ -79,9 +97,11 @@ impl DBI for Edupage {
         Ok(None)
     }
 
-    fn get_classrooms(&self) -> Result<Vec<crate::edupage_types::DBIBase>, crate::edupage::EdupageError> {
+    fn get_classrooms(
+        &self,
+    ) -> Result<Vec<crate::edupage_types::DBIBase>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
-            return Err(EdupageError::NotLoggedIn)
+            return Err(EdupageError::NotLoggedIn);
         }
 
         let data = self.data.as_ref().unwrap();
@@ -89,16 +109,19 @@ impl DBI for Edupage {
         Ok(data.dbi.classrooms.clone())
     }
 
-    fn get_classroom_by_id(&self, id: i64) -> Result<Option<crate::edupage_types::DBIBase>, crate::edupage::EdupageError> {
+    fn get_classroom_by_id(
+        &self,
+        id: i64,
+    ) -> Result<Option<crate::edupage_types::DBIBase>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
-            return Err(EdupageError::NotLoggedIn)
+            return Err(EdupageError::NotLoggedIn);
         }
 
         let data = self.data.as_ref().unwrap();
 
         for classroom in data.dbi.classrooms.clone() {
             if classroom.id.is_some() && classroom.id.unwrap() == id {
-                return Ok(Some(classroom))
+                return Ok(Some(classroom));
             }
         }
 

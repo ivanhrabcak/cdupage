@@ -1,16 +1,20 @@
+use crate::{edupage::EdupageError, edupage_types::Timetable as EduTimetable, edupage_types::*};
 use chrono::{NaiveDate, NaiveDateTime};
 use serde::{Deserialize, Serialize};
-use crate::{edupage::EdupageError, edupage_types::*, edupage_types::Timetable as EduTimetable};
 
 pub trait Login {
-    fn login(&mut self, 
-        subdomain: &String, username: &String, password: &String) -> Result<(), EdupageError>;
+    fn login(
+        &mut self,
+        subdomain: &String,
+        username: &String,
+        password: &String,
+    ) -> Result<(), EdupageError>;
 }
 
 pub trait DBI {
     fn get_teachers(&self) -> Result<Vec<Teacher>, EdupageError>;
     fn get_teacher_by_id(&self, id: i64) -> Result<Option<Teacher>, EdupageError>;
-    
+
     fn get_students(&self) -> Result<Vec<Student>, EdupageError>;
     fn get_student_by_id(&self, id: i64) -> Result<Option<Student>, EdupageError>;
 
@@ -22,8 +26,14 @@ pub trait DBI {
 }
 
 pub trait Timeline {
-    fn filter_timeline_by_item_type(&self, item_type: TimelineItemType) -> Result<Vec<TimelineItem>, EdupageError>;
-    fn filter_timeline_by_item_types(&self, item_types: Vec<TimelineItemType>) -> Result<Vec<TimelineItem>, EdupageError>;
+    fn filter_timeline_by_item_type(
+        &self,
+        item_type: TimelineItemType,
+    ) -> Result<Vec<TimelineItem>, EdupageError>;
+    fn filter_timeline_by_item_types(
+        &self,
+        item_types: Vec<TimelineItemType>,
+    ) -> Result<Vec<TimelineItem>, EdupageError>;
 }
 
 pub trait Timetable {
@@ -40,7 +50,8 @@ pub trait Substitution {
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub enum NextDayPart {
-    LESSON, BREAK
+    LESSON,
+    BREAK,
 }
 
 pub trait Ringing {

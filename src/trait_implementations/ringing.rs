@@ -1,7 +1,7 @@
-use chrono::{Local, NaiveDateTime};
 use crate::edupage::Edupage;
 use crate::edupage_traits::{NextDayPart, Ringing};
 use crate::edupage_types::RingingTime;
+use chrono::{Local, NaiveDateTime};
 
 impl RingingTime {
     pub fn new(name: i64, start_time: NaiveDateTime, end_time: NaiveDateTime) -> Self {
@@ -21,7 +21,10 @@ impl Ringing for Edupage {
         }
     }
 
-    fn get_next_lesson_time(&self, time: NaiveDateTime) -> Option<(chrono::NaiveDateTime, NextDayPart)> {
+    fn get_next_lesson_time(
+        &self,
+        time: NaiveDateTime,
+    ) -> Option<(chrono::NaiveDateTime, NextDayPart)> {
         let day_of_week = Local::now().date_naive().format("%a").to_string();
         if day_of_week == "Sun" || day_of_week == "Sat" {
             return None;

@@ -15,7 +15,7 @@ pub struct Edupage {
     pub(crate) client: reqwest::blocking::Client,
     pub(crate) data: Option<UserData>,
     pub(crate) gsec_hash: Option<String>,
-    pub(crate) subdomain: Option<String>
+    pub(crate) subdomain: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -26,7 +26,7 @@ pub enum EdupageError {
     ParseError(String),
     SerializationError(String),
     NotLoggedIn,
-    MissingData
+    MissingData,
 }
 
 pub enum RequestType {
@@ -51,7 +51,7 @@ impl Edupage {
             data: None,
             client,
             gsec_hash: None,
-            subdomain: None
+            subdomain: None,
         }
     }
 
@@ -122,10 +122,8 @@ impl Edupage {
         });
 
         self.gsec_hash = match html.split("ASC.gsechash=\"").nth(1) {
-            None => {
-                return Err("No gsechash in response!".to_string())
-            }
-            Some(v) => Some(v.split("\"").nth(0).unwrap().to_string())
+            None => return Err("No gsechash in response!".to_string()),
+            Some(v) => Some(v.split("\"").nth(0).unwrap().to_string()),
         };
 
         Ok(())
