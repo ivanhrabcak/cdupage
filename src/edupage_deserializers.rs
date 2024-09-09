@@ -380,12 +380,12 @@ pub mod year_month_day_optional {
 }
 
 pub mod javascript_date_format_option {
-    use chrono::{DateTime, Utc};
+    use chrono::NaiveDateTime;
     use serde::{self, Deserialize, Deserializer, Serializer};
 
     const FORMAT: &'static str = "%Y-%m-%d %H:%M:%S";
 
-    pub fn serialize<S>(date: &Option<DateTime<Utc>>, serializer: S) -> Result<S::Ok, S::Error>
+    pub fn serialize<S>(date: &Option<NaiveDateTime>, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -398,7 +398,7 @@ pub mod javascript_date_format_option {
         serializer.serialize_str(&s)
     }
 
-    pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<DateTime<Utc>>, D::Error>
+    pub fn deserialize<'de, D>(deserializer: D) -> Result<Option<NaiveDateTime>, D::Error>
     where
         D: Deserializer<'de>,
     {
@@ -408,8 +408,8 @@ pub mod javascript_date_format_option {
             return Ok(None);
         }
         let s = s.unwrap();
-        match DateTime::parse_from_str(&s, FORMAT).map_err(serde::de::Error::custom) {
-            Ok(x) => Ok(Some(x.into())),
+        match NaiveDateTime::parse_from_str(&s, FORMAT).map_err(serde::de::Error::custom) {
+            Ok(x) => Ok(Some(x)),
             Err(e) => Err(e),
         }
     }

@@ -38,6 +38,8 @@ impl Timetable for Edupage {
         for plan_item in plan.plan_items.clone().into_iter() {
             if plan_item.header.len() == 0 {
                 continue;
+            } else if plan_item.header[0].item.is_none() {
+                continue;
             }
 
             let teachers: Vec<Teacher> = if plan_item.teacher_ids.is_some() {
@@ -67,7 +69,7 @@ impl Timetable for Edupage {
                 Vec::new()
             };
 
-            let subject_id = plan_item.header[0].item.subject_id.unwrap();
+            let subject_id = plan_item.header[0].item.clone().unwrap().subject_id.unwrap();
             let subject = match self.get_subject_by_id(subject_id) {
                 Ok(s) => s,
                 Err(e) => return Err(e),

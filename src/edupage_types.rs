@@ -94,19 +94,19 @@ pub struct TimelineItem {
         serde(rename = "cas_pridania", with = "javascript_date_format_option")
     )]
     #[cfg_attr(feature = "node-types", ts(as = "Option<DateTime<Utc>>"))]
-    pub time_added: Option<DateTime<Utc>>,
+    pub time_added: Option<NaiveDateTime>,
 
     #[cfg_attr(
         not(feature = "node-types"),
         serde(rename = "cas_pridania_btc", with = "javascript_date_format_option")
     )]
-    pub time_added_btc: Option<DateTime<Utc>>,
+    pub time_added_btc: Option<NaiveDateTime>,
 
     #[cfg_attr(
         not(feature = "node-types"),
         serde(rename = "cas_udalosti", with = "javascript_date_format_option")
     )]
-    pub time_of_event: Option<DateTime<Utc>>,
+    pub time_of_event: Option<NaiveDateTime>,
 
     #[cfg_attr(not(feature = "node-types"), serde(rename = "data"))]
     pub additional_data: String,
@@ -139,7 +139,7 @@ pub struct TimelineItem {
     pub timeline_id: i64,
 
     #[serde(with = "javascript_date_format_option")]
-    pub timestamp: Option<DateTime<Utc>>,
+    pub timestamp: Option<NaiveDateTime>,
 
     #[cfg_attr(
         not(feature = "node-types"),
@@ -461,7 +461,7 @@ pub enum PlanItemType {
     ts(rename_all = "camelCase")
 )]
 pub struct PlanItemHeaderPart {
-    pub item: PlanItemHeaderItem,
+    pub item: Option<PlanItemHeaderItem>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
