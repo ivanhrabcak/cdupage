@@ -28,7 +28,7 @@ node-bindgen = { version = "6.1.0", default-features = false, features = ["build
 crate-type = ["lib", "dylib"]
 
 [features]
-default = ["node"]
+default = []
 node-types = ["dep:ts-rs"]
 node = ["dep:node-bindgen"]
 
