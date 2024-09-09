@@ -1,13 +1,25 @@
 use crate::{
-    edupage::{Edupage, EdupageError},
-    edupage_traits::Timeline,
+    edupage::{Edupage, EdupageError}, types::{dbi::*, person::*, timeline::*, timetable::Timetable as EduTimetable, RingingTime},
 };
+use chrono::{NaiveDate, NaiveDateTime};
+use serde::{Deserialize, Serialize};
+
+pub trait Timeline {
+    fn filter_timeline_by_item_type(
+        &self,
+        item_type: TimelineItemType,
+    ) -> Result<Vec<TimelineItem>, EdupageError>;
+    fn filter_timeline_by_item_types(
+        &self,
+        item_types: Vec<TimelineItemType>,
+    ) -> Result<Vec<TimelineItem>, EdupageError>;
+}
 
 impl Timeline for Edupage {
     fn filter_timeline_by_item_type(
         &self,
-        item_type: crate::edupage_types::timeline::TimelineItemType,
-    ) -> Result<Vec<crate::edupage_types::TimelineItem>, crate::edupage::EdupageError> {
+        item_type: crate::types::timeline::TimelineItemType,
+    ) -> Result<Vec<crate::types::TimelineItem>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
             return Err(EdupageError::NotLoggedIn);
         }
@@ -26,8 +38,8 @@ impl Timeline for Edupage {
 
     fn filter_timeline_by_item_types(
         &self,
-        item_types: Vec<crate::edupage_types::timeline::TimelineItemType>,
-    ) -> Result<Vec<crate::edupage_types::TimelineItem>, crate::edupage::EdupageError> {
+        item_types: Vec<crate::types::timeline::TimelineItemType>,
+    ) -> Result<Vec<crate::types::TimelineItem>, crate::edupage::EdupageError> {
         if !self.is_logged_in {
             return Err(EdupageError::NotLoggedIn);
         }

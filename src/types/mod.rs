@@ -7,7 +7,7 @@ pub use person::UserID;
 pub use timeline::TimelineItem;
 pub use timetable::DP;
 
-use crate::edupage_deserializers::*;
+use crate::deserializers::*;
 use crate::macro_aliases::*;
 
 pub mod dbi;

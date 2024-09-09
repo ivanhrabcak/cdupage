@@ -1,11 +1,28 @@
+use crate::{
+    edupage::EdupageError, types::dbi::*, types::person::*,
+    types::timeline::*, types::timetable::Timetable as EduTimetable,
+    types::RingingTime,
+};
+use chrono::{NaiveDate, NaiveDateTime};
 use serde::{Deserialize, Serialize};
 
 use common_macros::hash_map;
 
 use crate::{
-    edupage::{Edupage, EdupageError, RequestType},
-    edupage_traits::Login,
+    edupage::{Edupage, RequestType},
 };
+
+
+
+pub trait Login {
+    fn login(
+        &mut self,
+        subdomain: &str,
+        username: &str,
+        password: &str,
+    ) -> Result<(), EdupageError>;
+}
+
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct LoginCredentials {

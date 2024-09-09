@@ -1,7 +1,20 @@
-use crate::edupage::Edupage;
-use crate::edupage_traits::{NextDayPart, Ringing};
-use crate::edupage_types::RingingTime;
-use chrono::{Local, NaiveDateTime};
+use crate::{
+    edupage::{Edupage, EdupageError}, types::{dbi::*, person::*, timeline::*, timetable::Timetable as EduTimetable, RingingTime},
+};
+use chrono::{Local, NaiveDate, NaiveDateTime};
+use serde::{Deserialize, Serialize};
+
+
+#[derive(Serialize, Deserialize, Debug, Clone, Copy)]
+pub enum NextDayPart {
+    LESSON,
+    BREAK,
+}
+
+pub trait Ringing {
+    fn get_ringing_times(&self) -> Vec<RingingTime>;
+    fn get_next_lesson_time(&self, time: NaiveDateTime) -> Option<(NaiveDateTime, NextDayPart)>;
+}
 
 impl RingingTime {
     pub fn new(name: i64, start_time: NaiveDateTime, end_time: NaiveDateTime) -> Self {
@@ -41,3 +54,4 @@ impl Ringing for Edupage {
         None
     }
 }
+

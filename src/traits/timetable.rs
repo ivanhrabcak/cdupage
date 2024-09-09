@@ -1,14 +1,27 @@
-use crate::edupage::RequestType::POST;
-use crate::edupage::{Edupage, EdupageError, RequestType};
-use crate::edupage_traits::{Timetable, DBI};
-use crate::edupage_types::{
-    dbi::DBIBase, person::Teacher, timetable::Lesson, timetable::Timetable as EduTimetable,
+use crate::{
+    edupage::EdupageError, types::dbi::*, types::person::*,
+    types::timeline::*, types::timetable::Timetable as EduTimetable,
+    types::RingingTime,
 };
-use chrono::{NaiveDate, NaiveDateTime, Utc};
+use chrono::{NaiveDate, NaiveDateTime};
+use serde::{Deserialize, Serialize};
+
+use crate::edupage::RequestType::POST;
+use crate::edupage::{Edupage, RequestType};
+use crate::types::{
+    dbi::DBIBase, person::Teacher, timetable::Lesson,
+};
+use crate::traits::DBI;
+use chrono::{Utc};
 use common_macros::hash_map;
 use reqwest::Error;
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+
+
+
+pub trait Timetable {
+    fn get_timetable(&self, date: NaiveDate) -> Result<EduTimetable, EdupageError>;
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct OnlineLessonErrorLoginResponse {

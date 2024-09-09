@@ -1,12 +1,22 @@
 use std::collections::HashMap;
 
-use chrono::NaiveDate;
+use crate::{
+    edupage::{Edupage, EdupageError}, types::{dbi::*, person::*, timeline::*, timetable::Timetable as EduTimetable, RingingTime},
+};
+use chrono::{NaiveDate, NaiveDateTime};
 use common_macros::hash_map;
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
-
 use crate::edupage::RequestType::POST;
-use crate::edupage::{Edupage, EdupageError};
-use crate::edupage_traits::Substitution;
+
+
+pub trait Substitution {
+    fn get_substitution_html(
+        &self,
+        date: &NaiveDate,
+        subdomain: &str,
+    ) -> Result<String, EdupageError>;
+}
 
 impl Substitution for Edupage {
     fn get_substitution_html(

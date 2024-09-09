@@ -1,9 +1,9 @@
 pub mod edupage;
-pub mod edupage_deserializers;
-pub mod edupage_traits;
-pub mod edupage_types;
+pub mod deserializers;
+pub mod types;
+pub mod traits;
+
 mod macro_aliases;
-pub mod trait_implementations;
 
 #[cfg(feature = "node")]
 pub mod node;
@@ -20,7 +20,7 @@ mod tests {
 
     use chrono::Utc;
 
-    use crate::edupage_traits::{Login, Timeline, Timetable, DBI};
+    use crate::traits::{Login, Timeline, Timetable, DBI};
 
     fn get_env_var(name: &'static str) -> Option<String> {
         use std::env;
@@ -86,7 +86,7 @@ mod tests {
         assert_matches!(login_result, Ok(_));
 
         let homework = edupage.filter_timeline_by_item_type(
-            crate::edupage_types::timeline::TimelineItemType::Homework,
+            crate::types::timeline::TimelineItemType::Homework,
         );
         assert_matches!(homework, Ok(_));
 

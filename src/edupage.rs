@@ -7,7 +7,7 @@ use reqwest::{
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-use crate::edupage_types::UserData;
+use crate::types::UserData;
 
 #[derive(Clone)]
 pub struct Edupage {

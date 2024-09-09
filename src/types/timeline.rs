@@ -4,7 +4,7 @@ use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};
 use serde_aux::prelude::*;
 
-use crate::edupage_deserializers::*;
+use crate::deserializers::*;
 use crate::macro_aliases::*;
 
 use super::person::UserID;

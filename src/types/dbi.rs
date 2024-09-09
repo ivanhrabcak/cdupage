@@ -1,7 +1,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::edupage_deserializers::*;
+use crate::deserializers::*;
 use crate::macro_aliases::*;
 
 use super::person::Class;
