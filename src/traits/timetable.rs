@@ -1,7 +1,5 @@
 use crate::{
-    edupage::EdupageError, types::dbi::*, types::person::*,
-    types::timeline::*, types::timetable::Timetable as EduTimetable,
-    types::RingingTime,
+    edupage::EdupageError, types::timetable::Timetable as EduTimetable,
 };
 use chrono::{NaiveDate, NaiveDateTime};
 use serde::{Deserialize, Serialize};

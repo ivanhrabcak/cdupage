@@ -1,8 +1,6 @@
 use crate::{
-    edupage::{Edupage, EdupageError}, types::{dbi::*, person::*, timeline::*, timetable::Timetable as EduTimetable, RingingTime},
+    edupage::{Edupage, EdupageError}, types::timeline::*,
 };
-use chrono::{NaiveDate, NaiveDateTime};
-use serde::{Deserialize, Serialize};
 
 pub trait Timeline {
     fn filter_timeline_by_item_type(

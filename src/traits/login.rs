@@ -1,9 +1,4 @@
-use crate::{
-    edupage::EdupageError, types::dbi::*, types::person::*,
-    types::timeline::*, types::timetable::Timetable as EduTimetable,
-    types::RingingTime,
-};
-use chrono::{NaiveDate, NaiveDateTime};
+use crate::edupage::EdupageError;
 use serde::{Deserialize, Serialize};
 
 use common_macros::hash_map;

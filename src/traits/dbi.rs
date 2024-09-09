@@ -1,10 +1,6 @@
 use crate::{
     edupage::EdupageError, edupage::Edupage, types::dbi::*, types::person::*,
-    types::timeline::*, types::timetable::Timetable as EduTimetable,
-    types::RingingTime,
 };
-use chrono::{NaiveDate, NaiveDateTime};
-use serde::{Deserialize, Serialize};
 
 
 pub trait DBI {

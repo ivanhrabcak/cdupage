@@ -1,11 +1,8 @@
 use std::collections::HashMap;
 
-use crate::{
-    edupage::{Edupage, EdupageError}, types::{dbi::*, person::*, timeline::*, timetable::Timetable as EduTimetable, RingingTime},
-};
-use chrono::{NaiveDate, NaiveDateTime};
+use crate::edupage::{Edupage, EdupageError};
+use chrono::NaiveDate;
 use common_macros::hash_map;
-use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use crate::edupage::RequestType::POST;
 
