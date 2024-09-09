@@ -1,18 +1,25 @@
 use std::collections::HashMap;
 
+use crate::edupage::{Edupage, EdupageError};
 use chrono::NaiveDate;
 use common_macros::hash_map;
 use serde_json::Value;
-
 use crate::edupage::RequestType::POST;
-use crate::edupage::{Edupage, EdupageError};
-use crate::edupage_traits::Substitution;
+
+
+pub trait Substitution {
+    fn get_substitution_html(
+        &self,
+        date: &NaiveDate,
+        subdomain: &str,
+    ) -> Result<String, EdupageError>;
+}
 
 impl Substitution for Edupage {
     fn get_substitution_html(
         &self,
         date: &NaiveDate,
-        subdomain: &String,
+        subdomain: &str,
     ) -> Result<String, EdupageError> {
         let url = format!(
             "https://{}.edupage.org/substitution/server/viewer.js?__func=getSubstViewerDayDataHtml",

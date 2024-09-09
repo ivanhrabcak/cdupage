@@ -1,12 +1,25 @@
+use crate::{
+    edupage::EdupageError, types::timetable::Timetable as EduTimetable,
+};
+use chrono::{NaiveDate, NaiveDateTime};
+use serde::{Deserialize, Serialize};
+
 use crate::edupage::RequestType::POST;
-use crate::edupage::{Edupage, EdupageError, RequestType};
-use crate::edupage_traits::{Timetable, DBI};
-use crate::edupage_types::{DBIBase, Lesson, Teacher, Timetable as EduTimetable};
-use chrono::{NaiveDate, NaiveDateTime, Utc};
+use crate::edupage::{Edupage, RequestType};
+use crate::types::{
+    dbi::DBIBase, person::Teacher, timetable::Lesson,
+};
+use crate::traits::DBI;
+use chrono::{Utc};
 use common_macros::hash_map;
 use reqwest::Error;
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+
+
+
+pub trait Timetable {
+    fn get_timetable(&self, date: NaiveDate) -> Result<EduTimetable, EdupageError>;
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct OnlineLessonErrorLoginResponse {
@@ -36,7 +49,7 @@ impl Timetable for Edupage {
 
         let mut lessons: Vec<Lesson> = Vec::new();
         for plan_item in plan.plan_items.clone().into_iter() {
-            if plan_item.header.len() == 0 {
+            if plan_item.header.is_empty() {
                 continue;
             } else if plan_item.header[0].item.is_none() {
                 continue;
@@ -45,11 +58,8 @@ impl Timetable for Edupage {
             let teachers: Vec<Teacher> = if plan_item.teacher_ids.is_some() {
                 let ts = plan_item.teacher_ids.unwrap();
                 ts.iter()
-                    .map(|t| self.get_teacher_by_id(*t))
-                    .filter(|t| t.is_ok())
-                    .map(|t: Result<Option<Teacher>, EdupageError>| t.unwrap())
-                    .filter(|t| t.is_some())
-                    .map(|t| t.unwrap())
+                    .flat_map(|t| self.get_teacher_by_id(*t))
+                    .flatten()
                     .collect()
             } else {
                 Vec::new()
@@ -59,17 +69,19 @@ impl Timetable for Edupage {
                 let cls_rooms = plan_item.classroom_ids.unwrap();
                 cls_rooms
                     .iter()
-                    .map(|c| self.get_classroom_by_id(*c))
-                    .filter(|c| c.is_ok())
-                    .map(|c: Result<Option<DBIBase>, EdupageError>| c.unwrap())
-                    .filter(|c| c.is_some())
-                    .map(|c| c.unwrap())
+                    .flat_map(|c| self.get_classroom_by_id(*c))
+                    .flatten()
                     .collect()
             } else {
                 Vec::new()
             };
 
-            let subject_id = plan_item.header[0].item.clone().unwrap().subject_id.unwrap();
+            let subject_id = plan_item.header[0]
+                .item
+                .clone()
+                .unwrap()
+                .subject_id
+                .unwrap();
             let subject = match self.get_subject_by_id(subject_id) {
                 Ok(s) => s,
                 Err(e) => return Err(e),
@@ -81,8 +93,8 @@ impl Timetable for Edupage {
             };
 
             lessons.push(Lesson {
-                teachers: teachers,
-                classrooms: classrooms,
+                teachers,
+                classrooms,
                 start_of_lesson: plan_item.start_time.unwrap(),
                 end_of_lesson: plan_item.end_time.unwrap(),
                 online_lesson_link: plan_item.online_link,
@@ -91,13 +103,13 @@ impl Timetable for Edupage {
             })
         }
 
-        return Ok(EduTimetable { lessons });
+        Ok(EduTimetable { lessons })
     }
 }
 
 impl Lesson {
     pub fn is_online_lesson(&self) -> bool {
-        return self.online_lesson_link.is_some();
+        self.online_lesson_link.is_some()
     }
 
     pub fn sign_into_lesson(&self, edupage: &Edupage) -> Result<(), EdupageError> {
@@ -161,7 +173,7 @@ impl Lesson {
             Err(e) => return Err(EdupageError::HTTPError(e.to_string())),
         };
 
-        return match json_result {
+        match json_result {
             Ok(r) => {
                 if !r["reload"].is_null() {
                     Err(EdupageError::InvalidResponse)
@@ -170,7 +182,7 @@ impl Lesson {
                 }
             }
             Err(e) => Err(EdupageError::ParseError(e.to_string())),
-        };
+        }
     }
 }
 
@@ -198,43 +210,31 @@ impl Iterator for TimetableIntoIterator {
         let result = self.timetable.lessons.get(self.index).cloned();
         self.index += 1;
 
-        return result;
+        result
     }
 }
 
 impl EduTimetable {
     pub fn get_lesson_at_time(&self, time: NaiveDateTime) -> Option<Lesson> {
-        for lesson in self.clone().into_iter() {
-            if time >= lesson.start_of_lesson && time <= lesson.end_of_lesson {
-                return Some(lesson.clone());
-            }
-        }
-
-        None
+        self.clone()
+            .into_iter()
+            .find(|lesson| time >= lesson.start_of_lesson && time <= lesson.end_of_lesson)
     }
 
     pub fn get_next_lesson_at_time(&self, time: NaiveDateTime) -> Option<Lesson> {
-        for lesson in self.clone().into_iter() {
-            if time < lesson.start_of_lesson {
-                return Some(lesson);
-            }
-        }
-
-        None
+        self.clone()
+            .into_iter()
+            .find(|lesson| time < lesson.start_of_lesson)
     }
 
     pub fn get_next_online_lesson_at_time(&self, time: NaiveDateTime) -> Option<Lesson> {
-        for lesson in self.clone().into_iter() {
-            if time < lesson.start_of_lesson && lesson.is_online_lesson() {
-                return Some(lesson);
-            }
-        }
-
-        None
+        self.clone()
+            .into_iter()
+            .find(|lesson| time < lesson.start_of_lesson && lesson.is_online_lesson())
     }
 
     pub fn get_first_lesson(&self) -> Option<Lesson> {
-        if self.lessons.len() > 0 {
+        if !self.lessons.is_empty() {
             return Some(self.lessons[0].clone());
         }
 

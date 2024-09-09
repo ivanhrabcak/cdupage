@@ -1,11 +1,15 @@
 pub mod edupage;
-pub mod edupage_deserializers;
-pub mod edupage_traits;
-pub mod edupage_types;
-pub mod trait_implementations;
+pub mod deserializers;
+pub mod types;
+pub mod traits;
+
+mod macro_aliases;
 
 #[cfg(feature = "node")]
 pub mod node;
+
+#[macro_use]
+extern crate macro_rules_attribute;
 
 #[cfg(test)]
 #[macro_use]
@@ -16,7 +20,7 @@ mod tests {
 
     use chrono::Utc;
 
-    use crate::edupage_traits::{Login, Timeline, Timetable, DBI};
+    use crate::traits::{Login, Timeline, Timetable, DBI};
 
     fn get_env_var(name: &'static str) -> Option<String> {
         use std::env;
@@ -37,7 +41,7 @@ mod tests {
         let username = get_env_var("USERNAME");
         let password = get_env_var("PASSWORD");
 
-        if vec![&subdomain, &username, &password].contains(&&None) {
+        if [&subdomain, &username, &password].contains(&&None) {
             debug_assert_ne!(subdomain, None);
             debug_assert_ne!(username, None);
             debug_assert_ne!(password, None);
@@ -53,7 +57,7 @@ mod tests {
 
         assert_matches!(login_result, Ok(_));
 
-        assert_eq!(edupage.logged_in(), true);
+        assert!(edupage.logged_in());
     }
 
     #[test]
@@ -66,7 +70,7 @@ mod tests {
         let username = get_env_var("USERNAME");
         let password = get_env_var("PASSWORD");
 
-        if vec![&subdomain, &username, &password].contains(&&None) {
+        if [&subdomain, &username, &password].contains(&&None) {
             debug_assert_ne!(subdomain, None);
             debug_assert_ne!(username, None);
             debug_assert_ne!(password, None);
@@ -81,8 +85,9 @@ mod tests {
         let login_result = edupage.login(&subdomain, &username, &password);
         assert_matches!(login_result, Ok(_));
 
-        let homework =
-            edupage.filter_timeline_by_item_type(crate::edupage_types::TimelineItemType::Homework);
+        let homework = edupage.filter_timeline_by_item_type(
+            crate::types::timeline::TimelineItemType::Homework,
+        );
         assert_matches!(homework, Ok(_));
 
         let teachers = edupage.get_teachers();
@@ -108,7 +113,7 @@ mod tests {
         let username = get_env_var("USERNAME");
         let password = get_env_var("PASSWORD");
 
-        if vec![&subdomain, &username, &password].contains(&&None) {
+        if [&subdomain, &username, &password].contains(&&None) {
             debug_assert_ne!(subdomain, None);
             debug_assert_ne!(username, None);
             debug_assert_ne!(password, None);
