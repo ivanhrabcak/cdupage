@@ -9,6 +9,9 @@ use crate::macro_aliases::*;
 
 use super::person::UserID;
 
+#[cfg(feature = "node-types")]
+use ts_rs::TS;
+
 #[derive(
     Serde!, Serialize, IntoPrimitive, TryFromPrimitive, PartialEq, Copy,
 )]
@@ -57,7 +60,7 @@ pub struct TimelineItem {
         not(feature = "node-types"),
         serde(rename = "cas_pridania", with = "javascript_date_format_option")
     )]
-    #[cfg_attr(feature = "node-types", ts(as = "Option<DateTime<Utc>>"))]
+    #[cfg_attr(feature = "node-types", ts(as = "Option<NaiveDateTime>"))]
     pub time_added: Option<NaiveDateTime>,
 
     #[cfg_attr(

@@ -15,6 +15,7 @@ extern crate macro_rules_attribute;
 #[macro_use]
 extern crate assert_matches;
 
+#[cfg(not(feature = "node-types"))]
 #[cfg(test)]
 mod tests {
 

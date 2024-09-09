@@ -7,6 +7,9 @@ use crate::macro_aliases::*;
 
 use super::dbi::Gender;
 
+#[cfg(feature = "node-types")]
+use ts_rs::TS;
+
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",

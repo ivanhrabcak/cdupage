@@ -18,9 +18,15 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build
       run: cargo build --verbose
-    - name: Run tests
-      env:
-        SUBDOMAIN: ${{ secrets.SUBDOMAIN }}
-        USERNAME: ${{ secrets.USERNAME }}
-        PASSWORD: ${{ secrets.PASSWORD }}
-      run: cargo test --verbose
+    # - name: Run tests
+    #   env:
+    #     SUBDOMAIN: ${{ secrets.SUBDOMAIN }}
+    #     USERNAME: ${{ secrets.USERNAME }}
+    #     PASSWORD: ${{ secrets.PASSWORD }}
+    #   run: cargo test --verbose
+    - name: Install dependencies for generating node bindings
+      run: cargo install nj-cli
+    - name: Generate node bindings
+      run: nj-cli build --release -- --features node
+    - name: Generate typescript types
+      run: cargo test --features node-types

@@ -9,6 +9,9 @@ use super::person::Parent;
 use super::person::Student;
 use super::person::Teacher;
 
+#[cfg(feature = "node-types")]
+use ts_rs::TS;
+
 #[derive(Copy, Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",
