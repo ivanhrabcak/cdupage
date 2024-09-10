@@ -26,19 +26,9 @@ fn main() {
                 .filter(|f| f != "index")
                 .map(|f| format!("export * from \"./{}\"", f))
                 .collect();
-
+    
             let mut file = File::create("./bindings/index.ts").unwrap();
             file.write_all(exports.join("\n").as_bytes()).unwrap();
         }
-    };
-    #[cfg(feature = "cxx")]
-    {
-        let crate_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
-
-        cbindgen::Builder::new()
-            .with_crate(crate_dir)
-            .generate()
-            .expect("Unable to generate bindings")
-            .write_to_file("bindings.h");
-    };
+    }
 }
