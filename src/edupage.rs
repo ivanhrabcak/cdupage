@@ -17,7 +17,7 @@ pub struct Edupage {
     pub(crate) gsec_hash: Option<String>,
     pub(crate) subdomain: Option<String>,
 }
-
+/// Types of errors that Edupage supports
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum EdupageError {
     InvalidCredentials,
@@ -41,6 +41,7 @@ impl Default for Edupage {
 }
 
 impl Edupage {
+    /// Builds the client
     pub fn build_client() -> reqwest::blocking::Client {
         Client::builder()
             .connection_verbose(true)
@@ -48,7 +49,7 @@ impl Edupage {
             .build()
             .unwrap()
     }
-
+    /// Initializes the client
     pub fn new() -> Self {
         let client = Self::build_client();
 
@@ -60,7 +61,7 @@ impl Edupage {
             subdomain: None,
         }
     }
-
+    /// Requests the data.
     pub fn request(
         &self,
         url: String,
@@ -102,7 +103,7 @@ impl Edupage {
             Err(e) => Err(e.to_string()),
         }
     }
-
+    /// Parses the login data
     pub(crate) fn parse_login_data(&mut self, html: String) -> Result<(), String> {
         let json = match html.split("userhome(").nth(1) {
             Some(x) => x,
@@ -134,7 +135,7 @@ impl Edupage {
 
         Ok(())
     }
-
+    /// Checks if the user is logged in
     pub fn logged_in(&self) -> bool {
         self.is_logged_in
     }

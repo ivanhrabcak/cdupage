@@ -1,8 +1,14 @@
-pub mod edupage;
+#![doc = include_str!("../README.md")]
+/// Deserializers for this crate
 pub mod deserializers;
-pub mod types;
+/// EduPage types
+pub mod edupage;
+/// Traits that this crate uses
 pub mod traits;
-
+/// Types for this crate
+pub mod types;
+pub use crate::deserializers::*;
+/// Macro aliases that this crate uses.
 mod macro_aliases;
 
 #[cfg(feature = "node")]
@@ -86,9 +92,8 @@ mod tests {
         let login_result = edupage.login(&subdomain, &username, &password);
         assert_matches!(login_result, Ok(_));
 
-        let homework = edupage.filter_timeline_by_item_type(
-            crate::types::timeline::TimelineItemType::Homework,
-        );
+        let homework = edupage
+            .filter_timeline_by_item_type(crate::types::timeline::TimelineItemType::Homework);
         assert_matches!(homework, Ok(_));
 
         let teachers = edupage.get_teachers();
