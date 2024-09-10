@@ -25,6 +25,7 @@ impl RingingTime {
 }
 
 impl Ringing for Edupage {
+    /// Get the start and end times for lessons. The lessons are in-order.
     fn get_ringing_times(&self) -> Vec<RingingTime> {
         match &self.data {
             Some(x) => x.ringing_times.clone(),
@@ -32,6 +33,9 @@ impl Ringing for Edupage {
         }
     }
 
+    /// Returns `None` if the specified date is on a weekend.
+    /// 
+    /// If parameter `time` is a time during a lesson, `NextDayPart::BREAK` is reported as the next lesson.   
     fn get_next_lesson_time(
         &self,
         time: NaiveDateTime,

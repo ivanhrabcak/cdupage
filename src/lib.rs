@@ -1,18 +1,15 @@
+#![doc = "If you don't know where to start, you can look at all the available methods in the [`edupage::Edupage`] struct documentation."]
 #![doc = include_str!("../README.md")]
-/// Deserializers for this crate
-pub mod deserializers;
-/// EduPage types
+
+pub(crate) mod deserializers;
+pub(crate) mod macro_aliases;
+
 pub mod edupage;
-/// Lunches
-pub mod lunches;
-/// Macro aliases that this crate uses.
-mod macro_aliases;
-#[cfg(feature = "node")]
-pub mod node;
-/// Traits that this crate uses
 pub mod traits;
-/// Types for this crate
 pub mod types;
+
+#[cfg(feature = "node")]
+mod node;
 
 #[macro_use]
 extern crate macro_rules_attribute;
@@ -24,7 +21,6 @@ extern crate assert_matches;
 #[cfg(not(feature = "node-types"))]
 #[cfg(test)]
 mod tests {
-
     use chrono::Utc;
 
     use crate::traits::{Login, Timeline, Timetable, DBI};
