@@ -1,6 +1,5 @@
 use crate::{edupage::Edupage, edupage::EdupageError, types::dbi::*, types::person::*};
 
-/// Edupage's DB
 pub trait DBI {
     fn get_teachers(&self) -> Result<Vec<Teacher>, EdupageError>;
     fn get_teacher_by_id(&self, id: i64) -> Result<Option<Teacher>, EdupageError>;

@@ -1,4 +1,3 @@
-/// Trait reexports
 pub mod dbi;
 pub mod login;
 pub mod ringing;
