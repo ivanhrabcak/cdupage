@@ -3,15 +3,16 @@
 pub mod deserializers;
 /// EduPage types
 pub mod edupage;
+/// Lunches
+pub mod lunches;
 /// Macro aliases that this crate uses.
 mod macro_aliases;
+#[cfg(feature = "node")]
+pub mod node;
 /// Traits that this crate uses
 pub mod traits;
 /// Types for this crate
 pub mod types;
-
-#[cfg(feature = "node")]
-pub mod node;
 
 #[macro_use]
 extern crate macro_rules_attribute;
