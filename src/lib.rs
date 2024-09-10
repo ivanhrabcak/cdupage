@@ -3,13 +3,12 @@
 pub mod deserializers;
 /// EduPage types
 pub mod edupage;
+/// Macro aliases that this crate uses.
+mod macro_aliases;
 /// Traits that this crate uses
 pub mod traits;
 /// Types for this crate
 pub mod types;
-pub use crate::deserializers::*;
-/// Macro aliases that this crate uses.
-mod macro_aliases;
 
 #[cfg(feature = "node")]
 pub mod node;
