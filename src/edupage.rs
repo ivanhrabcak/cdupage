@@ -41,6 +41,7 @@ impl Default for Edupage {
 }
 
 impl Edupage {
+    /// Builds the client
     pub fn build_client() -> reqwest::blocking::Client {
         Client::builder()
             .connection_verbose(true)
@@ -48,6 +49,7 @@ impl Edupage {
             .build()
             .unwrap()
     }
+    /// Initializes the client
     pub fn new() -> Self {
         let client = Self::build_client();
 
@@ -59,6 +61,7 @@ impl Edupage {
             subdomain: None,
         }
     }
+    /// Requests the data.
     pub fn request(
         &self,
         url: String,
@@ -100,6 +103,7 @@ impl Edupage {
             Err(e) => Err(e.to_string()),
         }
     }
+    /// Parses the login data
     pub(crate) fn parse_login_data(&mut self, html: String) -> Result<(), String> {
         let json = match html.split("userhome(").nth(1) {
             Some(x) => x,

@@ -5,6 +5,7 @@ use common_macros::hash_map;
 
 use crate::edupage::{Edupage, RequestType};
 
+/// Logs in the user
 pub trait Login {
     fn login(
         &mut self,
