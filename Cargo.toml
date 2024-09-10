@@ -22,6 +22,7 @@ assert_matches = "1.5"
 dotenv = "0.15.0"
 
 [build-dependencies]
+cbindgen = "0.27.0"
 node-bindgen = { version = "6.1.0", default-features = false, features = ["build"], optional = true}
 
 [lib]
@@ -31,6 +32,7 @@ crate-type = ["lib", "dylib"]
 default = []
 node-types = ["dep:ts-rs"]
 node = ["dep:node-bindgen"]
+cxx = ["dep:cbindgen"]
 
 [dependencies]
 macro_rules_attribute = "0.2.0"
