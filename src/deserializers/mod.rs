@@ -1,16 +1,14 @@
-
-
-pub mod timeline;
+//! Crate's implementation of Deserializer trait for EduPage
 pub mod dbi;
 pub mod person;
+pub mod timeline;
 pub mod timetable;
-pub mod date;
 
-pub use timeline::*;
+pub use date::*;
 pub use dbi::*;
 pub use person::*;
+pub use timeline::*;
 pub use timetable::*;
-pub use date::*;
 
 pub mod string_i64_option {
     use serde::{self, Deserialize, Deserializer, Serializer};

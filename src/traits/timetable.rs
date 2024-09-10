@@ -1,22 +1,17 @@
-use crate::{
-    edupage::EdupageError, types::timetable::Timetable as EduTimetable,
-};
+use crate::{edupage::EdupageError, types::timetable::Timetable as EduTimetable};
 use chrono::{NaiveDate, NaiveDateTime};
 use serde::{Deserialize, Serialize};
 
 use crate::edupage::RequestType::POST;
 use crate::edupage::{Edupage, RequestType};
-use crate::types::{
-    dbi::DBIBase, person::Teacher, timetable::Lesson,
-};
 use crate::traits::DBI;
-use chrono::{Utc};
+use crate::types::{dbi::DBIBase, person::Teacher, timetable::Lesson};
+use chrono::Utc;
 use common_macros::hash_map;
 use reqwest::Error;
 use std::collections::HashMap;
 
-
-
+/// Gets today's timetable from EduPage's servers.
 pub trait Timetable {
     fn get_timetable(&self, date: NaiveDate) -> Result<EduTimetable, EdupageError>;
 }

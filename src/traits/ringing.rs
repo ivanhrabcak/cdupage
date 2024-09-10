@@ -1,9 +1,6 @@
-use crate::{
-    edupage::Edupage, types::RingingTime,
-};
+use crate::{edupage::Edupage, types::RingingTime};
 use chrono::{Local, NaiveDateTime};
 use serde::{Deserialize, Serialize};
-
 
 #[derive(Serialize, Deserialize, Debug, Clone, Copy)]
 pub enum NextDayPart {
@@ -17,6 +14,7 @@ pub trait Ringing {
 }
 
 impl RingingTime {
+    /// Initializes the RingingTime struct
     pub fn new(name: i64, start_time: NaiveDateTime, end_time: NaiveDateTime) -> Self {
         Self {
             name,
@@ -54,4 +52,3 @@ impl Ringing for Edupage {
         None
     }
 }
-

@@ -1,13 +1,13 @@
 use std::collections::HashMap;
 
+use crate::edupage::RequestType::POST;
 use crate::edupage::{Edupage, EdupageError};
 use chrono::NaiveDate;
 use common_macros::hash_map;
 use serde_json::Value;
-use crate::edupage::RequestType::POST;
-
 
 pub trait Substitution {
+    /// Checks for substitution
     fn get_substitution_html(
         &self,
         date: &NaiveDate,

@@ -1,7 +1,8 @@
 use crate::{
-    edupage::{Edupage, EdupageError}, types::timeline::*,
+    edupage::{Edupage, EdupageError},
+    types::timeline::*,
 };
-
+/// Gets the timeline from Edupage's servers
 pub trait Timeline {
     fn filter_timeline_by_item_type(
         &self,
