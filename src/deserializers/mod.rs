@@ -1,9 +1,9 @@
 //! Crate's implementation of Deserializer trait for EduPage
+pub mod date;
 pub mod dbi;
 pub mod person;
 pub mod timeline;
 pub mod timetable;
-
 pub use date::*;
 pub use dbi::*;
 pub use person::*;

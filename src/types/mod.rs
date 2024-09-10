@@ -1,3 +1,4 @@
+//! Types
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 use serde_aux::prelude::*;
