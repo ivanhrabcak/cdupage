@@ -14,7 +14,6 @@ pub trait Ringing {
 }
 
 impl RingingTime {
-    /// Initializes the RingingTime struct
     pub fn new(name: i64, start_time: NaiveDateTime, end_time: NaiveDateTime) -> Self {
         Self {
             name,
