@@ -15,7 +15,7 @@ pub struct Edupage {
     pub(crate) client: reqwest::blocking::Client,
     pub(crate) data: Option<UserData>,
     pub(crate) gsec_hash: Option<String>,
-    pub(crate) subdomain: Option<String>,
+    pub subdomain: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -41,14 +41,14 @@ impl Default for Edupage {
 }
 
 impl Edupage {
-    pub fn build_client() -> reqwest::blocking::Client {
+    pub(crate) fn build_client() -> reqwest::blocking::Client {
         Client::builder()
             .connection_verbose(true)
             .cookie_store(true)
             .build()
             .unwrap()
     }
-
+    
     pub fn new() -> Self {
         let client = Self::build_client();
 
@@ -60,7 +60,26 @@ impl Edupage {
             subdomain: None,
         }
     }
-
+    /// This method can be used for making authenticated requests to edupage.
+    /// 
+    /// Example usage (sending a message manually):
+    /// ```rust
+    /// let mut edupage = Edupage::new();
+    /// 
+    /// edupage.login("subdomain", "username", "password").unwrap();
+    /// 
+    /// let url = format!("https://{}.edupage.org/timeline/?akcia=createItem", edupage.subdomain);
+    /// let request_data = "{\"selectedUser\": \"Student12345\", \"text\": \"Hello World!\", \"attachements\": {}, \"receipt\": 0, \"typ\": \"sprava\"}";
+    /// let response = edupage.request(
+    ///     url, 
+    ///     RequestType::POST,
+    ///     Some(HashMap::from([("Content-Type", "application/json")])),
+    ///     Some(request_data)
+    /// ).unwrap();
+    /// 
+    /// println!("{}", response);
+    /// 
+    /// ```
     pub fn request(
         &self,
         url: String,

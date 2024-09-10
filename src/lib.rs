@@ -1,12 +1,15 @@
-pub mod edupage;
-pub mod deserializers;
-pub mod types;
-pub mod traits;
+#![doc = "If you don't know where to start, you can look at all the available methods in the [`edupage::Edupage`] struct documentation."]
+#![doc = include_str!("../README.md")]
 
-mod macro_aliases;
+pub(crate) mod deserializers;
+pub(crate) mod macro_aliases;
+
+pub mod edupage;
+pub mod traits;
+pub mod types;
 
 #[cfg(feature = "node")]
-pub mod node;
+mod node;
 
 #[macro_use]
 extern crate macro_rules_attribute;
@@ -18,7 +21,6 @@ extern crate assert_matches;
 #[cfg(not(feature = "node-types"))]
 #[cfg(test)]
 mod tests {
-
     use chrono::Utc;
 
     use crate::traits::{Login, Timeline, Timetable, DBI};
@@ -86,9 +88,8 @@ mod tests {
         let login_result = edupage.login(&subdomain, &username, &password);
         assert_matches!(login_result, Ok(_));
 
-        let homework = edupage.filter_timeline_by_item_type(
-            crate::types::timeline::TimelineItemType::Homework,
-        );
+        let homework = edupage
+            .filter_timeline_by_item_type(crate::types::timeline::TimelineItemType::Homework);
         assert_matches!(homework, Ok(_));
 
         let teachers = edupage.get_teachers();
