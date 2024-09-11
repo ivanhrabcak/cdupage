@@ -1,5 +1,5 @@
 use crate::edupage::{Edupage, RequestType};
-use reqwest::Method;
+use reqwest::{Body, Method};
 use serde::Deserialize;
 // TODO: Do docs on this
 #[derive(Default, Clone)]
@@ -54,9 +54,6 @@ impl<Menu: Clone> Lunch<Menu> {
     pub fn sign_off(self, epage: Edupage) {
         self.make_choice(epage, "AX")
     }
-    fn subdomain(sub: &str) -> &str {
-        sub
-    }
     pub fn get_lunch(self, date: chrono::NaiveDate) {
         let date_strftime = date.format("%Y%m%d");
         let request_url = format!("{}.edupage.org/menu", Edupage::new().subdomain.unwrap());
@@ -76,11 +73,25 @@ pub trait Menu<R: Rating> {
     const RATING: Option<R>;
     const WEIGHT: String;
 }
-#[derive(Default)]
+#[derive(Default, Deserialize)]
 pub struct Lunches(Edupage);
 
 impl Lunches {
-    fn get_lunch(self, date: chrono::NaiveDate) {}
+    #[deprecated = "Not finished yet."]
+    async fn get_lunch(self, date: chrono::NaiveDate) {
+        let date_strftime = date.format("%Y%m%d");
+        let request_url = format!(
+            "{}.edupage.org/menu/?date={date_strftime}",
+            Edupage::new().subdomain.unwrap()
+        );
+        // let response = reqwest::get(request_url)
+        //     .await.unwrap()
+        //     .json()
+        //     .await
+        //     .unwrap();
+
+        // let lunch_data: Self = serde_json::from_str(response).unwrap();
+    }
 }
 pub trait Rating {
     type RatingDate;

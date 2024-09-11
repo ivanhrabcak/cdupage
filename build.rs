@@ -26,7 +26,7 @@ fn main() {
                 .filter(|f| f != "index")
                 .map(|f| format!("export * from \"./{}\"", f))
                 .collect();
-    
+
             let mut file = File::create("./bindings/index.ts").unwrap();
             file.write_all(exports.join("\n").as_bytes()).unwrap();
         }

@@ -1,4 +1,3 @@
-
 use chrono::NaiveDateTime;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use serde::{Deserialize, Serialize};

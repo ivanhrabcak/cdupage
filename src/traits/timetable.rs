@@ -22,8 +22,8 @@ struct OnlineLessonErrorLoginResponse {
 }
 
 impl Timetable for Edupage {
-    /// Get the timetable for a given date. 
-    /// 
+    /// Get the timetable for a given date.
+    ///
     /// Note: Not all dates have available timetables - the data is pulled from edupage's user DP section.
     /// There is only data for a few days in advance.
     fn get_timetable(&self, date: NaiveDate) -> Result<EduTimetable, EdupageError> {
@@ -111,9 +111,9 @@ impl Lesson {
         self.online_lesson_link.is_some()
     }
 
-    /// Report your presence on a lesson to Edupage. 
-    /// 
-    /// Produces the same result as when the online lesson link is clicked on the website. 
+    /// Report your presence on a lesson to Edupage.
+    ///
+    /// Produces the same result as when the online lesson link is clicked on the website.
     pub fn sign_into_lesson(&self, edupage: &Edupage) -> Result<(), EdupageError> {
         if !edupage.logged_in() {
             return Err(EdupageError::NotLoggedIn);

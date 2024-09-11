@@ -139,4 +139,3 @@ impl DBI for Edupage {
         Ok(None)
     }
 }
-

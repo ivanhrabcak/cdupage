@@ -9,7 +9,7 @@ use std::collections::HashMap;
 
 use crate::types::UserData;
 
-#[derive(Clone)]
+#[derive(Clone, Deserialize)]
 pub struct Edupage {
     pub(crate) is_logged_in: bool,
     pub(crate) client: reqwest::blocking::Client,
@@ -48,7 +48,7 @@ impl Edupage {
             .build()
             .unwrap()
     }
-    
+
     pub fn new() -> Self {
         let client = Self::build_client();
 
@@ -61,27 +61,27 @@ impl Edupage {
         }
     }
     /// This method can be used for making authenticated requests to edupage.
-    /// 
+    ///
     /// Example usage (sending a message manually):
     /// ```no_run
     /// use std::collections::HashMap;
     /// use cdupage::{edupage::{RequestType, Edupage}, traits::Login};
-    /// 
+    ///
     /// let mut edupage = Edupage::new();
-    /// 
+    ///
     /// edupage.login("subdomain", "username", "password").unwrap();
-    /// 
+    ///
     /// let url = format!("https://{}.edupage.org/timeline/?akcia=createItem", edupage.subdomain.clone().unwrap());
     /// let request_data = "{\"selectedUser\": \"Student12345\", \"text\": \"Hello World!\", \"attachements\": {}, \"receipt\": 0, \"typ\": \"sprava\"}";
     /// let response = edupage.request(
-    ///     url, 
+    ///     url,
     ///     RequestType::POST,
     ///     Some(HashMap::from([("Content-Type".to_string(), "application/json".to_string())])),
     ///     Some(request_data.to_string())
     /// ).unwrap();
-    /// 
+    ///
     /// println!("{:?}", response);
-    /// 
+    ///
     /// ```
     pub fn request(
         &self,
