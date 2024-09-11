@@ -19,7 +19,6 @@ jobs:
     - name: Fix with clippy
       run: cargo clippy --fix --allow-dirty --allow-staged
     - name: Push changes (if any)
-      uses: actions/checkout@v4
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
