@@ -16,7 +16,7 @@ pub trait Timeline {
 
 impl Timeline for Edupage {
     /// Get timeline events (notifications) specifying the type of events you want.
-    /// 
+    ///
     /// If you want multiple types of events, you can use [`Timeline::filter_timeline_by_item_types`].
     fn filter_timeline_by_item_type(
         &self,

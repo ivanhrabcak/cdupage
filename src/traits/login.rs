@@ -34,10 +34,10 @@ impl LoginCredentials {
 
 impl Login for Edupage {
     /// Login to Edupage.
-    /// 
+    ///
     /// This method does not support 2 factor authentication or captchas.
     ///  
-    /// You can use `login1` as the subdomain to login through the Edupage portal. 
+    /// You can use `login1` as the subdomain to login through the Edupage portal.
     fn login(
         &mut self,
         subdomain: &str,

@@ -33,7 +33,7 @@ impl Ringing for Edupage {
     }
 
     /// Returns `None` if the specified date is on a weekend.
-    /// 
+    ///
     /// If parameter `time` is a time during a lesson, `NextDayPart::BREAK` is reported as the next lesson.   
     fn get_next_lesson_time(
         &self,
