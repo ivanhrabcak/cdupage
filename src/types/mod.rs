@@ -11,6 +11,7 @@ use crate::deserializers::*;
 use crate::macro_aliases::*;
 
 pub mod dbi;
+pub mod lunches;
 pub mod person;
 pub mod timeline;
 pub mod timetable;
