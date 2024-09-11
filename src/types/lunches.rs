@@ -2,8 +2,8 @@ use crate::edupage::{Edupage, RequestType};
 use reqwest::Method;
 use serde::Deserialize;
 // TODO: Do docs on this
-#[derive(Default, Clone, Deserialize)]
-pub struct Lunches<Menu> {
+#[derive(Default, Clone)]
+pub struct Lunch<Menu> {
     amount_of_foods: i32,
     can_be_changed_until: chrono::NaiveDate,
     choosable_menus: Vec<String>,
@@ -13,6 +13,7 @@ pub struct Lunches<Menu> {
     served_to: Option<chrono::NaiveDate>,
     title: String,
     __boarder_id: String,
+    __epage: Edupage,
 }
 #[derive(Default)]
 pub(crate) struct ALACarte<Rating> {
@@ -22,7 +23,7 @@ pub(crate) struct ALACarte<Rating> {
     rating: Option<Rating>,
     weight: String,
 }
-impl<Menu: Clone> Lunches<Menu> {
+impl<Menu: Clone> Lunch<Menu> {
     pub(crate) fn make_choice(self, epage: Edupage, choice_str: &str) {
         let sub = &epage.subdomain;
         let request_url = format!("{sub:#?}.edupage.org/menu");
@@ -47,8 +48,46 @@ impl<Menu: Clone> Lunches<Menu> {
         let letters: Option<[&str; 8]> = Some(["A", "B", "C", "D", "E", "F", "G", "H"]);
         let letter = letters.iter().nth((number - 1) as usize);
         for i in letter.unwrap() {
-            self.clone().make_choice(epage.clone(), i);
+            self.clone().make_choice(epage.clone(), i)
         }
     }
-    pub fn sign_off(self, epage: Edupage) {}
+    pub fn sign_off(self, epage: Edupage) {
+        self.make_choice(epage, "AX")
+    }
+    fn subdomain(sub: &str) -> &str {
+        sub
+    }
+    pub fn get_lunch(self, date: chrono::NaiveDate) {
+        let date_strftime = date.format("%Y%m%d");
+        let request_url = format!("{}.edupage.org/menu", Edupage::new().subdomain.unwrap());
+        let response = self
+            .__epage
+            .client
+            .request(Method::GET, request_url)
+            .build()
+            .unwrap();
+        todo!("Somehow figure out JSON splitting without known schema")
+    }
+}
+pub trait Menu<R: Rating> {
+    const ALLERGENS: String;
+    const NAME: String;
+    const NUMBER: String;
+    const RATING: Option<R>;
+    const WEIGHT: String;
+}
+#[derive(Default)]
+pub struct Lunches(Edupage);
+
+impl Lunches {
+    fn get_lunch(self, date: chrono::NaiveDate) {}
+}
+pub trait Rating {
+    type RatingDate;
+    type RatingBoarderId;
+    const QUALITY_AVERAGE: f32;
+    const QUALITY_RATINGS: f32;
+    const QUANTITY_AVERAGE: f32;
+    const QUANTITY_RATINGS: f32;
+    fn rate(self, epage: Edupage, quantity: i32, quality: i32);
 }
