@@ -22,4 +22,5 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        [[ -z "$(git status -s)" ]] && git commit -am "Automated formatting" && git push
+        git commit -am "Automated formatting"
+        git push
