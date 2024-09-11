@@ -1,5 +1,4 @@
 use chrono::{NaiveDate, NaiveTime};
-use reqwest::blocking::Client;
 use reqwest::Method;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -40,8 +39,7 @@ pub struct Rating {
 }
 
 pub struct Lunches {
-    pub client: Client,
-    pub subdomain: String,
+    edupage: Edupage,
 }
 impl Lunch {
     pub(crate) fn make_choice(self, epage: Edupage, choice_str: &str) {
@@ -64,6 +62,7 @@ impl Lunch {
             .build()
             .unwrap();
     }
+    /// Choose the food
     pub fn choose(self, epage: Edupage, number: i32) {
         let letters: Option<[&str; 8]> = Some(["A", "B", "C", "D", "E", "F", "G", "H"]);
         let letter = letters.iter().nth((number - 1) as usize);
@@ -76,15 +75,23 @@ impl Lunch {
     }
 }
 impl Lunches {
-    /// Creates a new instance of Lunches.
+    /// Retrieves lunch information for a given date
+        ///
+        /// # Arguments
+        ///
+        /// * `date` - The date for which to retrieve lunch information
+        ///
+        /// # Returns
+        ///
+        /// * `Result<Option<Lunch>>` - The lunch information if available, or None if not cooking
     pub fn get_lunch(&self, date: NaiveDate) -> Result<Option<Lunch>, Box<dyn Error>> {
         let date_strftime = date.format("%Y%m%d").to_string();
         let request_url = format!(
             "https://{}.edupage.org/menu/?date={}",
-            self.subdomain, date_strftime
+            self.edupage.subdomain.clone().unwrap(), date_strftime
         );
 
-        let response = self.client.get(&request_url).send()?.text()?;
+        let response = self.edupage.client.get(&request_url).send()?.text()?;
         let lunch_data: HashMap<String, serde_json::Value> = serde_json::from_str(
             response
                 .split("edupageData: ")
@@ -96,7 +103,7 @@ impl Lunches {
         )?;
 
         let lunches_data = lunch_data
-            .get(&self.subdomain)
+            .get(&self.edupage.subdomain.clone().unwrap())
             .ok_or("Missing lunch data")?;
 
         let boarder_id = lunches_data
