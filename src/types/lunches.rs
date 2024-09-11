@@ -76,19 +76,20 @@ impl Lunch {
 }
 impl Lunches {
     /// Retrieves lunch information for a given date
-        ///
-        /// # Arguments
-        ///
-        /// * `date` - The date for which to retrieve lunch information
-        ///
-        /// # Returns
-        ///
-        /// * `Result<Option<Lunch>>` - The lunch information if available, or None if not cooking
+    ///
+    /// # Arguments
+    ///
+    /// * `date` - The date for which to retrieve lunch information
+    ///
+    /// # Returns
+    ///
+    /// * `Result<Option<Lunch>>` - The lunch information if available, or None if not cooking
     pub fn get_lunch(&self, date: NaiveDate) -> Result<Option<Lunch>, Box<dyn Error>> {
         let date_strftime = date.format("%Y%m%d").to_string();
         let request_url = format!(
             "https://{}.edupage.org/menu/?date={}",
-            self.edupage.subdomain.clone().unwrap(), date_strftime
+            self.edupage.subdomain.clone().unwrap(),
+            date_strftime
         );
 
         let response = self.edupage.client.get(&request_url).send()?.text()?;
