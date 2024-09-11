@@ -9,7 +9,7 @@ use std::collections::HashMap;
 
 use crate::types::UserData;
 
-#[derive(Clone, Deserialize)]
+#[derive(Clone)]
 pub struct Edupage {
     pub(crate) is_logged_in: bool,
     pub(crate) client: reqwest::blocking::Client,

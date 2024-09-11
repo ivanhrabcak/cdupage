@@ -1,6 +1,6 @@
 #![doc = "If you don't know where to start, you can look at all the available methods in the [`edupage::Edupage`] struct documentation."]
 #![doc = include_str!("../README.md")]
-
+#![warn(clippy::all, clippy::pedantic)]
 pub(crate) mod deserializers;
 pub(crate) mod macro_aliases;
 
