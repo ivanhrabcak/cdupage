@@ -41,7 +41,7 @@ impl CDN for Edupage {
     fn upload_file(&self) -> Result<(), EdupageError> {
         let request_url = format!(
             "https://{}.edupage.org/timeline/?akcia=uploadAtt",
-            self.subdomain.as_ref().unwrap()
+            self.subdomain.as_ref().expect("")
         );
         let mut s = String::new();
         self.request(
@@ -53,9 +53,9 @@ impl CDN for Edupage {
             )])),
             None,
         )
-        .unwrap()
+        .expect("")
         .read_to_string(&mut s)
-        .unwrap();
+        .expect("");
         match serde_json::from_str::<Value>(&s) {
             Ok(response_json) => {
                 if response_json.get("status") != Some(&Value::String("ok".to_string())) {
