@@ -56,6 +56,12 @@ When implementing custom (de)serializers, it is recommended to use `mod` blocks 
 // This custom serializer code is used to parse edupage's ids, which are in the json as strings.
 // Because we want ids as `i64` in the code, we have to implement a custom serializer that checks
 // if the id is not null and convert the string to i64.
+//
+// Some examples:
+// "1234" => Some(1234)
+// "5432" => Some(5432)
+// "" => None
+// null => None
 pub mod string_i64_option {
     use serde::{self, Deserialize, Deserializer, Serializer};
 
