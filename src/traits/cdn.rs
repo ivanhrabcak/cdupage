@@ -15,13 +15,8 @@ pub trait CDN {
     /// You can find all supported file extensions on this
     /// [Edupage help site](https://help.edupage.org/?p=u1/u113/u132/u362/u467).
     ///
-    /// If you are willing to upload some files, you will probably have to increase the request
-    /// timeout.
-    /// # Example:
-    /// ```rust
-    /// let file = File::open("image.jpg").unwrap();
-    /// let result = cloud.upload_file(file);
-    /// ```
+    /// If you are willing to upload some files, you will probably have to increase the request timeout.
+    #[deprecated = "Use upload() method instead"]
     fn upload_file(&self) -> Result<(), EdupageError>;
 }
 
