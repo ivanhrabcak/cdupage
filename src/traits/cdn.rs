@@ -1,7 +1,6 @@
 use crate::edupage::{Edupage, EdupageError};
 use serde_json::{json, Value};
-use std::{collections::HashMap, io::Read};
-pub(crate) trait ECloudFile {
+pub trait ECloudFile {
     /// Upload file to EduPage.
     fn upload(self, body: &Value, domain: &str) -> Result<(), EdupageError>;
 }
@@ -16,8 +15,7 @@ pub trait CDN {
     /// [Edupage help site](https://help.edupage.org/?p=u1/u113/u132/u362/u467).
     ///
     /// If you are willing to upload some files, you will probably have to increase the request timeout.
-    #[deprecated = "Use upload() method instead"]
-    fn upload_file(&self) -> Result<(), EdupageError>;
+    fn download_file(&self) -> Result<Value, EdupageError>;
 }
 
 impl ECloudFile for Edupage {
@@ -28,38 +26,5 @@ impl ECloudFile for Edupage {
             .body(json!(body).to_string())
             .build();
         Ok(())
-    }
-}
-
-impl CDN for Edupage {
-    fn upload_file(&self) -> Result<(), EdupageError> {
-        let request_url = format!(
-            "https://{}.edupage.org/timeline/?akcia=uploadAtt",
-            self.subdomain.as_ref().expect("")
-        );
-        let mut s = String::new();
-        self.request(
-            request_url.clone(),
-            crate::edupage::RequestType::GET,
-            Some(HashMap::from([(
-                "Content-Type".to_string(),
-                "application/binary".to_string(),
-            )])),
-            None,
-        )
-        .expect("")
-        .read_to_string(&mut s)
-        .expect("");
-        match serde_json::from_str::<Value>(&s) {
-            Ok(response_json) => {
-                if response_json.get("status") != Some(&Value::String("ok".to_string())) {
-                    panic!("Edupage didn't return positive value")
-                }
-
-                let metadata = response_json.get("data");
-                Edupage::new().upload(metadata.unwrap(), request_url.as_str())
-            }
-            Err(_) => panic!("Failed to decode json response"),
-        }
     }
 }
