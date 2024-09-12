@@ -1,5 +1,4 @@
 use crate::edupage::{Edupage, EdupageError};
-use reqwest::blocking::Request;
 use serde_json::{json, Value};
 use std::{collections::HashMap, io::Read};
 pub(crate) trait ECloudFile {
