@@ -1,11 +1,10 @@
 use crate::edupage::{Edupage, EdupageError};
-use anyhow::Result;
 use reqwest::blocking::Request;
 use serde_json::{json, Value};
 use std::{collections::HashMap, io::Read};
 pub(crate) trait ECloudFile {
     /// Upload file to EduPage.
-    fn upload(self, body: &Value, domain: &str) -> Result<Request, EdupageError>;
+    fn upload(self, body: &Value, domain: &str) -> Result<(), EdupageError>;
 }
 pub trait CDN {
     /// Upload file to EduPage cloud.
@@ -24,21 +23,22 @@ pub trait CDN {
     /// let file = File::open("image.jpg").unwrap();
     /// let result = cloud.upload_file(file);
     /// ```
-    fn upload_file(&self);
+    fn upload_file(&self) -> Result<(), EdupageError>;
 }
 
 impl ECloudFile for Edupage {
-    fn upload(self, body: &serde_json::Value, domain: &str) {
-        Edupage::new()
+    fn upload(self, body: &serde_json::Value, domain: &str) -> Result<(), EdupageError> {
+        let _ = Edupage::new()
             .client
             .post(domain)
             .body(json!(body).to_string())
             .build();
+        Ok(())
     }
 }
 
 impl CDN for Edupage {
-    fn upload_file(&self) {
+    fn upload_file(&self) -> Result<(), EdupageError> {
         let request_url = format!(
             "https://{}.edupage.org/timeline/?akcia=uploadAtt",
             self.subdomain.as_ref().unwrap()
