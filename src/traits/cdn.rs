@@ -1,9 +1,13 @@
+use crate::edupage::{Edupage, EdupageError};
+use anyhow::Result;
+use reqwest::blocking::Request;
+use serde_json::{json, Value};
+use std::{collections::HashMap, io::Read};
 pub(crate) trait ECloudFile {
     /// Upload file to EduPage.
-    fn upload(self, body: &serde_json::Value, domain: &str);
+    fn upload(self, body: &Value, domain: &str) -> Result<Request, EdupageError>;
 }
 pub trait CDN {
-    // Required
     /// Upload file to EduPage cloud.
     ///
     /// The file will be hosted forever (and for free) on EduPage's servers. The file is tied to
@@ -22,17 +26,6 @@ pub trait CDN {
     /// ```
     fn upload_file(&self);
 }
-use crate::edupage::Edupage;
-use serde_json::{json, Value};
-use std::collections::HashMap;
-use std::io::Read;
-
-#[derive(Default)]
-pub struct Cloud {
-    edupage: Edupage,
-}
-#[derive(Debug)]
-pub struct EduCloudFile;
 
 impl ECloudFile for Edupage {
     fn upload(self, body: &serde_json::Value, domain: &str) {
@@ -40,8 +33,7 @@ impl ECloudFile for Edupage {
             .client
             .post(domain)
             .body(json!(body).to_string())
-            .build()
-            .unwrap();
+            .build();
     }
 }
 

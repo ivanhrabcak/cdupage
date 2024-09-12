@@ -33,4 +33,5 @@ node-types = ["dep:ts-rs"]
 node = ["dep:node-bindgen"]
 
 [dependencies]
+anyhow = "1.0.88"
 macro_rules_attribute = "0.2.0"
