@@ -11,7 +11,7 @@ env:
 
 jobs:
   format_if_merged:
-    if: ${{ (github.event == 'pull_request' && github.event.pull_request.merged == true) || github.event == 'workflow_dispatch' }}
+    if: ${{ (github.event_name == 'pull_request' && github.event.pull_request.merged == true) || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
