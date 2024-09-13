@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use serde_literals::lit_str;
 
 use super::Serde;
@@ -23,9 +23,8 @@ pub struct CloudFile {
     pub file_type: String,
 
     pub file: String,
-    pub name: String
+    pub name: String,
 }
-
 
 lit_str!(OkStatus, "ok");
 
@@ -36,15 +35,13 @@ lit_str!(OkStatus, "ok");
 pub enum EdupageCloudResponseStatus {
     #[serde(with = "OkStatus")]
     Ok,
-    Other(String)
+    Other(String),
 }
-
-
 
 #[derive(Serde!, Serialize)]
 pub struct EdupageCloudResponse {
     pub status: EdupageCloudResponseStatus,
 
     #[cfg_attr(not(feature = "node-types"), serde(rename = "data"))]
-    pub response: Option<CloudFile>
+    pub response: Option<CloudFile>,
 }

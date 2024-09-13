@@ -27,7 +27,7 @@ pub enum EdupageError {
     SerializationError(String),
     NotLoggedIn,
     MissingData,
-    Other(String)
+    Other(String),
 }
 
 pub enum RequestType {

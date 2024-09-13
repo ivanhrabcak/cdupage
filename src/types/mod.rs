@@ -10,17 +10,17 @@ pub use timetable::DP;
 use crate::deserializers::*;
 use crate::macro_aliases::*;
 
+pub mod cloud;
 pub mod dbi;
 pub mod person;
 pub mod timeline;
 pub mod timetable;
-pub mod cloud;
 
+pub use cloud::*;
 pub use dbi::*;
 pub use person::*;
 pub use timeline::*;
 pub use timetable::*;
-pub use cloud::*;
 
 #[cfg(feature = "node-types")]
 use ts_rs::TS;
