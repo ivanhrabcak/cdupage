@@ -1,14 +1,13 @@
-Thank you for investing your time in contributing to my project! I really value your work and help.
+Thank you for investing your time in contributing to this project! I really value your work and help.
 
 # Code - general rules
-I try to write code as cleanly as possible, I think readability is the most important thing when wrtiting code.
+Try to write code as cleanly as possible, readability is the most important thing when wrtiting code.
  
 - Functionality that is provided to the user is in the form of a trait (a file in the `traits` module) that is implemented for the `Edupage` struct
 - Use the `Edupage::request` method if possible when requesting data from edupage instead of using the client directly
 - Try not to use `Map<String, Value>` - create types for json that is returned from edupage
 - Use the `EdupageError` error type for all errors
 - Do not use `.unwrap()` or code that can crash unless it is certain that it will not crash (check with `is_ok`/`is_some`/`if let`)
-- ... and others, you can read the code for more information, or read the next section that describes the structure of this project, which also includes additional instructions.
 
 # Code - structure
 In the following section, I am providing a guide to the structure of my code and some instructions for implementing new features.
