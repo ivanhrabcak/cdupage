@@ -69,7 +69,7 @@ impl Login for Edupage {
             None => {
                 return Err(EdupageError::ParseError(
                     "Failed to parse csrf token.".to_string(),
-                ))
+                ));
             }
         }
         .split("\"")

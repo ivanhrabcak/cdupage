@@ -23,7 +23,7 @@ extern crate assert_matches;
 mod tests {
     use chrono::Utc;
 
-    use crate::traits::{Login, Timeline, Timetable, DBI};
+    use crate::traits::{DBI, Login, Timeline, Timetable};
 
     fn get_env_var(name: &'static str) -> Option<String> {
         use std::env;
