@@ -1,7 +1,6 @@
 fn main() {
     #[cfg(feature = "node")]
     node_bindgen::build::configure();
-
     #[cfg(feature = "node-types")]
     {
         use std::{
@@ -19,8 +18,7 @@ fn main() {
                 .filter_map(|p| {
                     p.path()
                         .file_stem()
-                        .map(OsStr::to_str)
-                        .flatten()
+                        .and_then(OsStr::to_str)
                         .map(str::to_owned)
                 })
                 .filter(|f| f != "index")
@@ -30,5 +28,18 @@ fn main() {
             let mut file = File::create("./bindings/index.ts").unwrap();
             file.write_all(exports.join("\n").as_bytes()).unwrap();
         }
+    }
+    #[cfg(feature = "c_any_other_lang")]
+    {
+        cbindgen::Builder::new()
+            .with_crate(env!("CARGO_MANIFEST_DIR"))
+            .with_cpp_compat(true)
+            .with_std_types(true).with_config(cbindgen::Config {
+            language: cbindgen::Language::Cxx, // Generate C++ header
+            ..Default::default()
+        })
+            .generate()
+            .expect("Unable to generate bindings")
+            .write_to_file("bindings/bindings.h");
     }
 }

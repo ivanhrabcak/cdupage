@@ -24,7 +24,7 @@ pub use timetable::*;
 
 #[cfg(feature = "node-types")]
 use ts_rs::TS;
-
+#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",
@@ -50,7 +50,7 @@ pub struct UserData {
 
     pub dp: DP,
 }
-
+#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",

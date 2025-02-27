@@ -44,6 +44,7 @@ pub enum TimelineItemType {
     TestAssignment = 19,
 }
 
+#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",
