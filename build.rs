@@ -34,10 +34,11 @@ fn main() {
         cbindgen::Builder::new()
             .with_crate(env!("CARGO_MANIFEST_DIR"))
             .with_cpp_compat(true)
-            .with_std_types(true).with_config(cbindgen::Config {
-            language: cbindgen::Language::Cxx, // Generate C++ header
-            ..Default::default()
-        })
+            .with_std_types(true)
+            .with_config(cbindgen::Config {
+                language: cbindgen::Language::Cxx, // Generate C++ header
+                ..Default::default()
+            })
             .generate()
             .expect("Unable to generate bindings")
             .write_to_file("bindings/bindings.h");

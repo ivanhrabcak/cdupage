@@ -1,12 +1,12 @@
 use std::{fs::File, io::Write};
 
+use crate::types::UserData;
 use reqwest::{
     blocking::{Client, Response},
     header::{HeaderMap, HeaderName, HeaderValue},
 };
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use crate::types::UserData;
 #[repr(C)]
 #[derive(Clone)]
 pub struct Edupage {

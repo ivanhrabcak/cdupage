@@ -81,10 +81,7 @@ impl Timetable for Edupage {
                 .unwrap()
                 .subject_id
                 .unwrap();
-            let subject = match self.get_subject_by_id(subject_id) {
-                Ok(s) => s,
-                Err(e) => return Err(e),
-            };
+            let subject = self.get_subject_by_id(subject_id)?;
 
             let subject_name = match subject {
                 Some(s) => s.name,
@@ -244,6 +241,6 @@ impl EduTimetable {
     }
 
     pub fn get_last_lesson(&self) -> Option<Lesson> {
-        return self.lessons.last().cloned();
+        self.lessons.last().cloned()
     }
 }
