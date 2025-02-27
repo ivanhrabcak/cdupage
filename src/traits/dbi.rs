@@ -15,7 +15,7 @@ pub trait DBI {
 }
 
 impl DBI for Edupage {
-    #[no_mangle]
+    #[unsafe(no_mangle)]
     extern "C" fn get_teachers(
         &self,
     ) -> Result<Vec<crate::types::person::Teacher>, crate::edupage::EdupageError> {
@@ -27,7 +27,7 @@ impl DBI for Edupage {
 
         Ok(data.dbi.teachers.clone())
     }
-    #[no_mangle]
+    #[unsafe(no_mangle)]
     extern "C" fn get_teacher_by_id(
         &self,
         id: i64,
@@ -46,7 +46,7 @@ impl DBI for Edupage {
 
         Ok(None)
     }
-    #[no_mangle]
+    #[unsafe(no_mangle)]
     extern "C" fn get_students(
         &self,
     ) -> Result<Vec<crate::types::person::Student>, crate::edupage::EdupageError> {
@@ -58,7 +58,7 @@ impl DBI for Edupage {
 
         Ok(data.dbi.students.clone())
     }
-    #[no_mangle]
+    #[unsafe(no_mangle)]
     extern "C" fn get_student_by_id(
         &self,
         id: i64,
@@ -77,7 +77,7 @@ impl DBI for Edupage {
 
         Ok(None)
     }
-    #[no_mangle]
+    #[unsafe(no_mangle)]
     extern "C" fn get_subjects(
         &self,
     ) -> Result<Vec<crate::types::dbi::DBIBase>, crate::edupage::EdupageError> {
@@ -89,7 +89,7 @@ impl DBI for Edupage {
 
         Ok(data.dbi.subjects.clone())
     }
-    #[no_mangle]
+    #[unsafe(no_mangle)]
     extern "C" fn get_subject_by_id(
         &self,
         id: i64,
@@ -108,7 +108,7 @@ impl DBI for Edupage {
 
         Ok(None)
     }
-    #[no_mangle]
+    #[unsafe(no_mangle)]
     extern "C" fn get_classrooms(
         &self,
     ) -> Result<Vec<crate::types::dbi::DBIBase>, crate::edupage::EdupageError> {
@@ -120,7 +120,7 @@ impl DBI for Edupage {
 
         Ok(data.dbi.classrooms.clone())
     }
-    #[no_mangle]
+    #[unsafe(no_mangle)]
     extern "C" fn get_classroom_by_id(
         &self,
         id: i64,

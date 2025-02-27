@@ -21,7 +21,7 @@ pub trait Cloud {
 }
 
 impl Cloud for Edupage {
-    #[no_mangle]
+    #[unsafe(no_mangle)]
     extern "C" fn upload(&self, path: PathBuf) -> Result<CloudFile, EdupageError> {
         if !self.is_logged_in {
             return Err(EdupageError::NotLoggedIn);
@@ -66,6 +66,7 @@ impl Cloud for Edupage {
 }
 
 impl CloudFile {
+    #[unsafe(no_mangle)]
     pub extern "C" fn get_url(&self, edupage: Edupage) -> Result<String, EdupageError> {
         if !edupage.logged_in() {
             Err(EdupageError::NotLoggedIn)

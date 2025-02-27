@@ -39,7 +39,7 @@ impl Login for Edupage {
     /// This method does not support 2 factor authentication or captchas.
     ///  
     /// You can use `login1` as the subdomain to login through the Edupage portal.
-    #[no_mangle]
+    #[unsafe(no_mangle)]
     extern "C" fn login(
         &mut self,
         subdomain: &str,
