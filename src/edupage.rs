@@ -1,4 +1,4 @@
-use std::{fmt, fs::File, io::Write};
+use std::{fs::File, io::Write};
 
 use reqwest::{
     blocking::{Client, Response},
@@ -6,7 +6,6 @@ use reqwest::{
 };
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use chrono::SecondsFormat;
 use crate::types::UserData;
 #[repr(C)]
 #[derive(Clone)]
