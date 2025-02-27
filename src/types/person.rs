@@ -9,6 +9,7 @@ use super::dbi::Gender;
 #[cfg(feature = "node-types")]
 use ts_rs::TS;
 
+#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",
@@ -72,6 +73,7 @@ pub struct Student {
     pub number_in_class: Option<i64>,
 }
 
+#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",
@@ -93,6 +95,7 @@ pub struct Parent {
     pub gender: Option<Gender>,
 }
 
+#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",
@@ -137,6 +140,7 @@ pub struct Teacher {
     pub date_to: Option<NaiveDate>,
 }
 
+#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",
@@ -173,6 +177,7 @@ pub struct Class {
     pub classroom_id: Option<i64>,
 }
 
+#[repr(C)]
 #[derive(Copy, Clone, Debug)]
 #[cfg_attr(
     feature = "node-types",

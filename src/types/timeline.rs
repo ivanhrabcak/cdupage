@@ -11,6 +11,7 @@ use super::person::UserID;
 #[cfg(feature = "node-types")]
 use ts_rs::TS;
 
+#[repr(C)]
 #[derive(
     Serde!, Serialize, IntoPrimitive, TryFromPrimitive, PartialEq, Copy,
 )]
@@ -44,6 +45,7 @@ pub enum TimelineItemType {
     TestAssignment = 19,
 }
 
+#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",

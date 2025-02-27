@@ -1,7 +1,12 @@
 fn main() {
     #[cfg(feature = "node")]
     node_bindgen::build::configure();
-
+    #[cfg(feature = "c_any_other_lang")]
+    cbindgen::Builder::new()
+        .with_crate(env!("CARGO_MANIFEST_DIR"))
+        .generate()
+        .expect("Unable to generate bindings")
+        .write_to_file("bindings/bindings.h");
     #[cfg(feature = "node-types")]
     {
         use std::{

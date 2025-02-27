@@ -2,7 +2,7 @@ use num_enum::TryFromPrimitiveError;
 
 use crate::types::timeline::TimelineItemType;
 
-pub const TIMELINE_ITEM_TYPE_NAMES: [&str; 19] = [
+extern "C" const TIMELINE_ITEM_TYPE_NAMES: [&str; 19] = [
     "news",
     "sprava",
     "h_dailyplan",

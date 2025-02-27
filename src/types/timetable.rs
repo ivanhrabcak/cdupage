@@ -12,6 +12,7 @@ use super::person::Teacher;
 #[cfg(feature = "node-types")]
 use ts_rs::TS;
 
+#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",
@@ -23,6 +24,7 @@ pub struct Timetable {
     pub lessons: Vec<Lesson>,
 }
 
+#[repr(C)]
 #[derive(Debug, Clone, Copy)]
 #[cfg_attr(
     feature = "node-types",
@@ -35,6 +37,7 @@ pub enum PlanItemType {
     Lesson,
 }
 
+#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",
@@ -49,6 +52,7 @@ pub struct DP {
     pub school_year: i32,
 }
 
+#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",
@@ -66,6 +70,7 @@ pub struct Lesson {
     pub name: String,
 }
 
+#[repr(C)]
 #[derive(Serialize, Serde!)]
 #[cfg_attr(
     feature = "node-types",
@@ -84,6 +89,7 @@ pub struct Plan {
     pub week: i32,
 }
 
+#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",
@@ -95,6 +101,7 @@ pub struct PlanItemHeaderPart {
     pub item: Option<PlanItemHeaderItem>,
 }
 
+#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",
@@ -110,6 +117,7 @@ pub struct PlanItemHeaderItem {
     pub subject_id: Option<i64>,
 }
 
+#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",
