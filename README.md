@@ -19,7 +19,11 @@ cargo test --features node-types
 ```
 Ignore any failed tests. The types will be generated in the `bindings` directory
 
-
+# C/C++ (experimental)
+Binds will be generated in the `bindings/` directory.
+```shell
+cargo build
+```
 # TODO (goals)
 - [ ] All functionality from [edupage-api](https://github.com/ivanhrabcak/edupage-api) and [EdupageAPI](https://github.com/loumadev/EdupageAPI)
 - [ ] Bindings for major languages (published, official)
