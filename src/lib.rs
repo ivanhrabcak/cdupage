@@ -8,7 +8,6 @@ pub mod edupage;
 pub mod traits;
 pub mod types;
 
-mod ffi;
 #[cfg(feature = "node")]
 mod node;
 

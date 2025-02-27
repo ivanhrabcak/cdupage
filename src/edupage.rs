@@ -1,4 +1,4 @@
-use std::{fs::File, io::Write};
+use std::{fmt, fs::File, io::Write};
 
 use reqwest::{
     blocking::{Client, Response},
@@ -6,9 +6,9 @@ use reqwest::{
 };
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-
+use chrono::SecondsFormat;
 use crate::types::UserData;
-
+#[repr(C)]
 #[derive(Clone)]
 pub struct Edupage {
     pub(crate) is_logged_in: bool,
@@ -17,7 +17,7 @@ pub struct Edupage {
     pub(crate) gsec_hash: Option<String>,
     pub subdomain: Option<String>,
 }
-
+#[repr(C)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum EdupageError {
     InvalidCredentials,
@@ -29,7 +29,7 @@ pub enum EdupageError {
     MissingData,
     Other(String),
 }
-
+#[repr(C)]
 pub enum RequestType {
     GET,
     POST,
@@ -84,7 +84,7 @@ impl Edupage {
     /// println!("{:?}", response);
     ///
     /// ```
-    pub fn request(
+    pub extern "C" fn request(
         &self,
         url: String,
         request_type: RequestType,
@@ -158,7 +158,7 @@ impl Edupage {
         Ok(())
     }
 
-    pub fn logged_in(&self) -> bool {
+    pub extern "C" fn logged_in(&self) -> bool {
         self.is_logged_in
     }
 }

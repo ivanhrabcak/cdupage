@@ -11,7 +11,6 @@ use super::person::UserID;
 #[cfg(feature = "node-types")]
 use ts_rs::TS;
 
-#[repr(C)]
 #[derive(
     Serde!, Serialize, IntoPrimitive, TryFromPrimitive, PartialEq, Copy,
 )]

@@ -32,5 +32,6 @@ node-types = ["dep:ts-rs"]
 node = ["dep:node-bindgen"]
 c_any_other_lang = ["dep:cbindgen"]
 [dependencies]
+abi_stable = "0.11.3"
 macro_rules_attribute = "0.2.0"
 serde_literals = "0.1.1"
