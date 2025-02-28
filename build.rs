@@ -42,9 +42,6 @@ fn main() {
             documentation: true,
             documentation_style: cbindgen::DocumentationStyle::Doxy,
             includes: vec![
-                "map".to_string(),
-                "string".to_string(),
-                "vector".to_string(),
                 dir_path.to_str().unwrap().to_string(),
             ],
             language: cbindgen::Language::Cxx,
