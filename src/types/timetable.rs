@@ -117,7 +117,6 @@ pub struct PlanItemHeaderItem {
     pub subject_id: Option<i64>,
 }
 
-#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",

@@ -17,12 +17,12 @@ pub trait Cloud {
     /// [Edupage help site](https://help.edupage.org/?p=u1/u113/u132/u362/u467).
     ///
     /// If you are willing to upload some files, you will probably have to increase the request timeout.
-    extern "C" fn upload(&self, file: PathBuf) -> Result<CloudFile, EdupageError>;
+    fn upload(&self, file: PathBuf) -> Result<CloudFile, EdupageError>;
 }
 
 impl Cloud for Edupage {
     #[unsafe(no_mangle)]
-    extern "C" fn upload(&self, path: PathBuf) -> Result<CloudFile, EdupageError> {
+    fn upload(&self, path: PathBuf) -> Result<CloudFile, EdupageError> {
         if !self.is_logged_in {
             return Err(EdupageError::NotLoggedIn);
         }
@@ -67,7 +67,7 @@ impl Cloud for Edupage {
 
 impl CloudFile {
     #[unsafe(no_mangle)]
-    pub extern "C" fn get_url(&self, edupage: Edupage) -> Result<String, EdupageError> {
+    pub fn get_url(&self, edupage: Edupage) -> Result<String, EdupageError> {
         if !edupage.logged_in() {
             Err(EdupageError::NotLoggedIn)
         } else {

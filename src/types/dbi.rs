@@ -10,7 +10,7 @@ use super::person::Teacher;
 
 #[cfg(feature = "node-types")]
 use ts_rs::TS;
-#[repr(C)]
+
 #[derive(Copy, Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",
@@ -23,7 +23,6 @@ pub enum Gender {
     Female,
 }
 
-#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",
@@ -55,7 +54,7 @@ pub struct DBI {
 }
 
 // only the base properties a lot dbi entries have in common
-#[repr(C)]
+
 #[derive(Deserialize, Clone, Debug)]
 #[cfg_attr(
     feature = "node-types",

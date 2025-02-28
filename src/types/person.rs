@@ -9,7 +9,6 @@ use super::dbi::Gender;
 #[cfg(feature = "node-types")]
 use ts_rs::TS;
 
-#[repr(C)]
 #[derive(Serde!, Serialize)]
 #[cfg_attr(
     feature = "node-types",

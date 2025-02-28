@@ -1,0 +1,15 @@
+[package]
+name = "ffi"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ffi-sys = {version = "*", path = "../ffi-sys", optional = true }
+
+[features]
+default = []
+ffi-sys = ["dep:ffi-sys"]
+
+[lib]
+name = "cdupage"
+path = "../src/lib.rs"

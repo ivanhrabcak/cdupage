@@ -1,6 +1,9 @@
 #![doc = "If you don't know where to start, you can look at all the available methods in the [`edupage::Edupage`] struct documentation."]
 #![doc = include_str!("../README.md")]
 
+#[cfg(feature = "c_any_other_lang")]
+pub use ffi;
+
 pub(crate) mod deserializers;
 pub(crate) mod macro_aliases;
 

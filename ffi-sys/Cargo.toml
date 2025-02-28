@@ -1,0 +1,7 @@
+[package]
+name = "ffi-sys"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+autocxx = "0.29.0"
