@@ -2,17 +2,18 @@ use std::ffi::c_char;
 use cdupage::edupage::{Edupage, RequestType};
 use ffi_sys::*;
 #[repr(C)]
-pub struct Cdupage {
-	ep: Edupage
+pub enum CequestType {
+	GET,
+	POST
 }
-#[repr(C)]
-pub struct CequestType(RequestType);
-impl Cdupage {
-	#[unsafe(no_mangle)]
-	extern "C" fn new() -> Cdupage {
-		Cdupage {
-			ep: Edupage::new()
+impl Into<RequestType> for CequestType {
+	fn into(self) -> RequestType {
+		match self {
+			CequestType::GET => RequestType::GET,
+			CequestType::POST => RequestType::POST
 		}
 	}
-	extern "C" fn request(&self, url: &[c_char], request_type: CequestType, ) {  }
+}
+extern "C" fn request(url: &[c_char], request_type: CequestType, headers: &[(String, String)], post_data: Option<&[c_char]>) {
+	self.ep.request(url, request_type, headers, Some(post_data.unwrap()));
 }
