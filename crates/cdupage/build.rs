@@ -1,4 +1,3 @@
-use std::path::Path;
 
 fn main() {
     #[cfg(feature = "node")]
