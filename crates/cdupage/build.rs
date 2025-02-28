@@ -1,4 +1,7 @@
+<<<<<<< HEAD:crates/cdupage/build.rs
 use std::path::Path;
+=======
+>>>>>>> f8c7e55 (Automated formatting):build.rs
 fn main() {
     #[cfg(feature = "node")]
     node_bindgen::build::configure();
