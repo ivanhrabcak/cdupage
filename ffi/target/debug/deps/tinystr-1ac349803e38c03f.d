@@ -1,0 +1,12 @@
+/home/matus/Documents/github/cdupage/ffi/target/debug/deps/libtinystr-1ac349803e38c03f.rmeta: /home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/lib.rs /home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/macros.rs /home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/ascii.rs /home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/asciibyte.rs /home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/error.rs /home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/int_ops.rs /home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/unvalidated.rs /home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/ule.rs
+
+/home/matus/Documents/github/cdupage/ffi/target/debug/deps/tinystr-1ac349803e38c03f.d: /home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/lib.rs /home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/macros.rs /home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/ascii.rs /home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/asciibyte.rs /home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/error.rs /home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/int_ops.rs /home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/unvalidated.rs /home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/ule.rs
+
+/home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/lib.rs:
+/home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/macros.rs:
+/home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/ascii.rs:
+/home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/asciibyte.rs:
+/home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/error.rs:
+/home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/int_ops.rs:
+/home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/unvalidated.rs:
+/home/matus/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/tinystr-0.7.6/src/ule.rs:

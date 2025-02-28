@@ -83,7 +83,7 @@ impl Edupage {
     /// println!("{:?}", response);
     ///
     /// ```
-    pub extern "C" fn request(
+    pub  fn request(
         &self,
         url: String,
         request_type: RequestType,
@@ -157,7 +157,7 @@ impl Edupage {
         Ok(())
     }
 
-    pub extern "C" fn logged_in(&self) -> bool {
+    pub fn logged_in(&self) -> bool {
         self.is_logged_in
     }
 }

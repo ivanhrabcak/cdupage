@@ -39,7 +39,7 @@ pub enum EdupageCloudResponseStatus {
     Ok,
     Other(String),
 }
-#[repr(C)]
+
 #[derive(Serde!, Serialize)]
 pub struct EdupageCloudResponse {
     pub status: EdupageCloudResponseStatus,

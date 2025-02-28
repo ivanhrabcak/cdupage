@@ -4,7 +4,8 @@ version = "0.1.0"
 edition = "2024"
 rust-version = "1.85.0"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
+[workspace]
+members = ["ffi", "ffi-sys"]
 [target.'cfg(any(windows, unix))'.dependencies]
 reqwest = { version = "0.12.7", features = ["blocking", "json", "cookies", "multipart"] }
 chrono = { version = "0.4.19", features = ["serde"] }

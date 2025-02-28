@@ -7,7 +7,7 @@ use common_macros::hash_map;
 use serde_json::Value;
 
 pub trait Substitution {
-    extern "C" fn get_substitution_html(
+     fn get_substitution_html(
         &self,
         date: &NaiveDate,
         subdomain: &str,
@@ -20,7 +20,7 @@ impl Substitution for Edupage {
     /// The data is HTML which can be customized in every school, so you'll have to figure out your own parsing (for now).
     ///
     /// It includes the following information: which teachers are missing, classroom changes for lessons and cancelled lessons.
-    extern "C" fn get_substitution_html(
+     fn get_substitution_html(
         &self,
         date: &NaiveDate,
         subdomain: &str,
