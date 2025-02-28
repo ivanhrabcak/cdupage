@@ -7,7 +7,7 @@ use crate::edupage::{Edupage, RequestType};
 
 /// Logs in the user
 pub trait Login {
-     fn login(
+    fn login(
         &mut self,
         subdomain: &str,
         username: &str,
@@ -24,7 +24,7 @@ pub struct LoginCredentials {
 }
 
 impl LoginCredentials {
-    pub  fn new(username: String, password: String, csrfauth: String) -> Self {
+    pub fn new(username: String, password: String, csrfauth: String) -> Self {
         Self {
             username,
             password,
@@ -40,7 +40,7 @@ impl Login for Edupage {
     ///  
     /// You can use `login1` as the subdomain to login through the Edupage portal.
     #[unsafe(no_mangle)]
-     fn login(
+    fn login(
         &mut self,
         subdomain: &str,
         username: &str,

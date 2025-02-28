@@ -4,5 +4,12 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-cdupage = {version = "*", path = "../"}
-ffi-sys = {version = "*", path = "../ffi-sys" }
+ffi-sys = {version = "*", path = "../ffi-sys", optional = true }
+
+[features]
+default = []
+ffi-sys = ["dep:ffi-sys"]
+
+[lib]
+name = "cdupage"
+path = "../src/lib.rs"

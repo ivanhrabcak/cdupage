@@ -16,6 +16,7 @@ serde_urlencoded = "0.7.0"
 serde-aux = "4.5.0"
 node-bindgen = { version = "6.1.0", optional = true }
 common_macros = "0.1.1"
+ffi = {version = "0.1.0", path = "./ffi", optional = true}
 ts-rs = { version = "10.1.0", optional = true, default-features = false, features = ["format", "serde-json-impl", "chrono-impl"] }
 [dev-dependencies]
 assert_matches = "1.5"
@@ -31,7 +32,7 @@ crate-type = ["lib", "cdylib"]
 default = []
 node-types = ["dep:ts-rs"]
 node = ["dep:node-bindgen"]
-c_any_other_lang = ["dep:cbindgen"]
+c_any_other_lang = ["dep:cbindgen", "dep:ffi"]
 [dependencies]
 macro_rules_attribute = "0.2.0"
 serde_literals = "0.1.1"

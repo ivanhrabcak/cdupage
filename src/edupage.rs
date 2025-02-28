@@ -83,7 +83,7 @@ impl Edupage {
     /// println!("{:?}", response);
     ///
     /// ```
-    pub  fn request(
+    pub fn request(
         &self,
         url: String,
         request_type: RequestType,
