@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> ff9422e (Automated formatting)
 fn main() {
     #[cfg(feature = "node")]
     node_bindgen::build::configure();
