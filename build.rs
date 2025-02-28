@@ -1,4 +1,3 @@
-use std::path::Path;
 
 fn main() {
     #[cfg(feature = "node")]
@@ -41,9 +40,7 @@ fn main() {
             usize_is_size_t: true,
             documentation: true,
             documentation_style: cbindgen::DocumentationStyle::Doxy,
-            includes: vec![
-                dir_path.to_str().unwrap().to_string(),
-            ],
+            includes: vec![dir_path.to_str().unwrap().to_string()],
             language: cbindgen::Language::Cxx,
             ..Default::default()
         };
