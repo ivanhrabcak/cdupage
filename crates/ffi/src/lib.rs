@@ -22,17 +22,23 @@ impl Into<RequestType> for CequestType {
         }
     }
 }
+struct CduLogin {
+    sub: String,
+    username: String,
+    password: String,
+}
 #[repr(C)]
 #[derive(Clone)]
-pub struct CdupageLogin(Edupage);
-
-impl CdupageLogin {
+pub struct Cdupage(Edupage);
+#[allow(clippy::unnecessary_operation)]
+impl Cdupage {
     /// Logs in to EduPage
-    /// Will store the values
-    extern "C" fn login(&mut self, sub: RStr, user: RStr, pass: RStr) {
-        self.0.login(sub.into(), user.into(), pass.into()).unwrap()
+    pub extern "C" fn login(&mut self, sub: RStr, user: RStr, pass: RStr) {
+        self.0.login(sub.into(), user.into(), pass.into()).unwrap();
+        CduLogin { sub: sub.into(), username: user.into(), password: pass.into(), };
     }
-    extern "C" fn request(
+    /// Request data from given EduPage server
+    pub extern "C" fn request(
         &self,
         url: RString,
         request_type: CequestType,
@@ -47,5 +53,8 @@ impl CdupageLogin {
                 Some(post_data.unwrap().into()),
             )
             .unwrap();
+    }
+    pub fn logged_in(&self) -> bool {
+        self.0.logged_in()
     }
 }

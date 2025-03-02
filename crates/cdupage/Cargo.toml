@@ -21,14 +21,13 @@ dotenv = "0.15.0"
 
 [build-dependencies]
 node-bindgen = { version = "6.1.0", default-features = false, features = ["build"], optional = true}
-cbindgen = { version = "0.28.0" , optional = true }
 [lib]
 crate-type = ["lib", "cdylib"]
 [features]
 default = []
 node-types = ["dep:ts-rs"]
 node = ["dep:node-bindgen"]
-c_any_other_lang = ["dep:cbindgen", "dep:cduffi"]
+c_any_other_lang = ["dep:cduffi"]
 [dependencies]
 cduffi = { version = "0.1.0", path = "../ffi", optional = true }
 macro_rules_attribute = "0.2.0"
