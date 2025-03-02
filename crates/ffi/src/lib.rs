@@ -5,13 +5,19 @@ use cdupage::{
     edupage::{Edupage, RequestType},
     traits::Login,
 };
-use std::convert::Into;
+use std::{collections::HashMap, convert::Into};
 //use ffi_sys::*;
-
 #[repr(C)]
 pub enum CequestType {
     GET,
     POST,
+}
+#[derive(Clone)]
+#[repr(C)]
+struct CduDetails {
+    sub: RString,
+    user: RString,
+    pass: RString,
 }
 #[allow(clippy::from_over_into)]
 impl Into<RequestType> for CequestType {
@@ -22,43 +28,62 @@ impl Into<RequestType> for CequestType {
         }
     }
 }
-struct CduLogin {
-    sub: String,
-    username: String,
-    password: String,
-}
-#[repr(C)]
+#[repr(transparent)]
 #[derive(Clone)]
-pub struct Cdupage(Edupage);
+pub struct Cdupage(CduDetails);
+impl CduDetails {
+    fn write_info(sub: &str, user: &str, pass: &str) -> CduDetails {
+        Self {
+            sub: sub.into(),
+            user: user.into(),
+            pass: pass.into(),
+        }
+    }
+}
 #[allow(clippy::unnecessary_operation)]
 impl Cdupage {
     /// Logs in to EduPage
-    pub extern "C" fn login(&mut self, sub: RStr, user: RStr, pass: RStr) {
-        self.0.login(sub.into(), user.into(), pass.into()).unwrap();
-        CduLogin {
-            sub: sub.into(),
-            username: user.into(),
-            password: pass.into(),
-        };
+    #[unsafe(no_mangle)]
+    pub extern "C" fn login(&mut self, sub: RStr, user: RStr, pass: RStr) -> Cdupage {
+        Edupage::new()
+            .login(sub.into(), user.into(), pass.into())
+            .unwrap_or_default();
+        Cdupage(CduDetails::write_info(sub.into(), user.into(), pass.into()))
+
     }
-    /// Request data from given EduPage server
+    /// Request data from given EduPage server.
+    /// The data must be JSON encoded in a string literal
+    #[unsafe(no_mangle)]
     pub extern "C" fn request(
         &self,
         url: RString,
         request_type: CequestType,
-        headers: ROption<RHashMap<String, String>>,
+        headers: ROption<RHashMap<RString, RString>>,
         post_data: ROption<RString>,
-    ) {
-        self.0
-            .request(
-                url.into(),
-                request_type.into(),
-                Some(headers.unwrap().into()),
-                Some(post_data.unwrap().into()),
-            )
+    ) -> RString {
+        let mut headers_map: Option<HashMap<String, String>> = None;
+        if let ROption::RSome(hdrs) = headers {
+            let mut m = HashMap::new();
+            for pair in hdrs.into_iter() {
+                m.insert(pair.0.into(), pair.1.into());
+            }
+            headers_map = Some(m);
+        }
+
+        let post_data_str: Option<String> = match post_data {
+            ROption::RSome(s) => Some(s.into()),
+            ROption::RNone => None,
+        };
+        let res = Edupage::new()
+            .request(url.into(), request_type.into(), headers_map, post_data_str)
+            .unwrap()
+            .text()
             .unwrap();
+
+        res.into()
     }
-    pub fn logged_in(&self) -> bool {
-        self.0.logged_in()
-    }
+    //    #[unsafe(no_mangle)]
+    //    pub extern "C" fn logged_in(&self) -> bool {
+    //        Edupage::new().login(&*self.0.sub, &*self.0.user, &*self.0.pass)
+    //    }
 }

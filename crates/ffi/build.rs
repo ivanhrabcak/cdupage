@@ -1,7 +1,7 @@
 use std::path::Path;
 
 fn main() {
-    let dir_path = Path::new(env!("CARGO_MANIFEST_DIR")).join("crates/ffi/binds.hpp");
+    let dir_path = Path::new(env!("CARGO_MANIFEST_DIR")).join("../ffi-sys/binds.hpp");
     let config = cbindgen::Config {
         only_target_dependencies: true,
         pragma_once: true,
@@ -9,7 +9,11 @@ fn main() {
         usize_is_size_t: true,
         documentation: true,
         documentation_style: cbindgen::DocumentationStyle::Doxy,
-        includes: vec![dir_path.to_str().unwrap().to_string()],
+        includes: vec![
+            dir_path.to_str().unwrap().to_string(),
+            "../defs.h".to_string(),
+        ],
+
         language: cbindgen::Language::Cxx,
         ..Default::default()
     };
@@ -20,5 +24,5 @@ fn main() {
         .with_config(config)
         .generate()
         .expect("Unable to generate bindings")
-        .write_to_file("bindings/bindings.h");
+        .write_to_file("bindings/bindings.hpp");
 }
