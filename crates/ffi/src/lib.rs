@@ -35,7 +35,11 @@ impl Cdupage {
     /// Logs in to EduPage
     pub extern "C" fn login(&mut self, sub: RStr, user: RStr, pass: RStr) {
         self.0.login(sub.into(), user.into(), pass.into()).unwrap();
-        CduLogin { sub: sub.into(), username: user.into(), password: pass.into(), };
+        CduLogin {
+            sub: sub.into(),
+            username: user.into(),
+            password: pass.into(),
+        };
     }
     /// Request data from given EduPage server
     pub extern "C" fn request(
