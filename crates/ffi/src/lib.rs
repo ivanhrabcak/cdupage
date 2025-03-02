@@ -49,6 +49,7 @@ impl Cdupage {
             .login(sub.into(), user.into(), pass.into())
             .unwrap_or_default();
         Cdupage(CduDetails::write_info(sub.into(), user.into(), pass.into()))
+
     }
     /// Request data from given EduPage server.
     /// The data must be JSON encoded in a string literal

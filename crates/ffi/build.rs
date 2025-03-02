@@ -13,6 +13,7 @@ fn main() {
             dir_path.to_str().unwrap().to_string(),
             "../defs.h".to_string(),
         ],
+
         language: cbindgen::Language::Cxx,
         ..Default::default()
     };
