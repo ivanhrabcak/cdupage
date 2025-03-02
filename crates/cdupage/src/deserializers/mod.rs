@@ -4,11 +4,12 @@ pub mod dbi;
 pub mod person;
 pub mod timeline;
 pub mod timetable;
+#[cfg(feature = "c_any_other_lang")]
+pub use cduffi::*;
 pub use date::*;
 pub use dbi::*;
 pub use timeline::*;
 pub use timetable::*;
-
 pub mod string_i64_option {
     use serde::{self, Deserialize, Deserializer, Serializer};
 

@@ -1,15 +1,12 @@
 [package]
-name = "ffi"
+name = "cduffi"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+abi_stable = "0.11.3"
+cdupage = { version = "0.1.0", git = "https://github.com/ivanhrabcak/cdupage" }
 ffi-sys = {version = "*", path = "../ffi-sys", optional = true }
-
 [features]
 default = []
 ffi-sys = ["dep:ffi-sys"]
-
-[lib]
-name = "cdupage"
-path = "../src/lib.rs"
