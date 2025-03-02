@@ -9,6 +9,8 @@ pub use timetable::DP;
 
 use crate::deserializers::*;
 use crate::macro_aliases::*;
+#[cfg(feature = "c_any_other_lang")]
+pub use cduffi as ffi;
 
 pub mod cloud;
 pub mod dbi;

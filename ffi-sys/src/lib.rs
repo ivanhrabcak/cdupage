@@ -3,14 +3,11 @@
 #![allow(non_snake_case)]
 use autocxx::prelude::*;
 include_cpp! {
-    #include "binds.hpp"
-    safety!(unsafe_ffi)
-    generate!("vector")
-    generate!("map")
-    generate!("string")
+	#include "binds.hpp"
+	safety!(unsafe_ffi)
+	generate!("vector")
+	generate!("map")
+	generate!("string")
 }
 
-include!(concat!(
-    env!("_DIR"),
-    "/autocxx-build-dir/rs/autocxx-ffi-default-gen.rs"
-));
+include!(concat!(env!("OUT_DIR"), "/autocxx-build-dir/rs/autocxx-ffi-default-gen.rs" ));
