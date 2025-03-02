@@ -1,7 +1,10 @@
+<<<<<<< HEAD
 <<<<<<< HEAD:crates/cdupage/build.rs
 use std::path::Path;
 =======
 >>>>>>> f8c7e55 (Automated formatting):build.rs
+=======
+>>>>>>> a091194 (Cargo fmt is better than GH actions)
 fn main() {
     #[cfg(feature = "node")]
     node_bindgen::build::configure();
