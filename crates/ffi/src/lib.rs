@@ -1,8 +1,5 @@
 //! FFI binds to the [`cdupage`] crate.
 //! Automatic header binds generation will be moved here
-use std::collections;
-use abi_stable::StableAbi;
-use abi_stable::reexports::SelfOps;
 use abi_stable::std_types::{RHashMap, ROption, RStr, RString};
 use cdupage::{
     edupage::{Edupage, RequestType},
