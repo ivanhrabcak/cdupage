@@ -1,3 +1,4 @@
+use std::path::Path;
 fn main() {
     #[cfg(feature = "node")]
     node_bindgen::build::configure();
