@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> ff9422e (Automated formatting)
-=======
->>>>>>> 0dd6334 (Automated formatting)
 fn main() {
     #[cfg(feature = "node")]
     node_bindgen::build::configure();
