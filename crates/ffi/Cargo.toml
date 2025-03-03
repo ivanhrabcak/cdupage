@@ -9,6 +9,8 @@ cdupage = { version = "0.1.0", git = "https://github.com/ivanhrabcak/cdupage" }
 ffi-sys = {version = "*", path = "../ffi-sys", optional = true }
 [build-dependencies]
 cbindgen = "0.28.0"
+[lib]
+crate-type = ["cdylib"]
 [features]
 default = []
 ffi-sys = ["dep:ffi-sys"]

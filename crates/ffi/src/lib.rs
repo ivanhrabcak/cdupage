@@ -49,7 +49,6 @@ impl Cdupage {
             .login(sub.into(), user.into(), pass.into())
             .unwrap_or_default();
         Cdupage(CduDetails::write_info(sub.into(), user.into(), pass.into()))
-
     }
     /// Request data from given EduPage server.
     /// The data must be JSON encoded in a string literal
@@ -74,7 +73,14 @@ impl Cdupage {
             ROption::RSome(s) => Some(s.into()),
             ROption::RNone => None,
         };
-        let res = Edupage::new()
+        let mut ep = Edupage::new();
+        ep.login(
+            &self.0.sub.clone(),
+            &self.0.user.clone(),
+            &self.0.pass.clone(),
+        )
+        .unwrap_or_default();
+        let res = ep
             .request(url.into(), request_type.into(), headers_map, post_data_str)
             .unwrap()
             .text()
@@ -82,8 +88,10 @@ impl Cdupage {
 
         res.into()
     }
-    //    #[unsafe(no_mangle)]
-    //    pub extern "C" fn logged_in(&self) -> bool {
-    //        Edupage::new().login(&*self.0.sub, &*self.0.user, &*self.0.pass)
-    //    }
+        #[unsafe(no_mangle)]
+        pub extern "C" fn logged_in(&self) -> bool {
+            let mut ep = Edupage::new();
+            ep.login(&self.0.sub, &self.0.user, &self.0.pass).unwrap();
+            ep.logged_in()
+        }
 }
