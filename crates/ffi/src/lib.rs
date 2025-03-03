@@ -88,10 +88,10 @@ impl Cdupage {
 
         res.into()
     }
-        #[unsafe(no_mangle)]
-        pub extern "C" fn logged_in(&self) -> bool {
-            let mut ep = Edupage::new();
-            ep.login(&self.0.sub, &self.0.user, &self.0.pass).unwrap();
-            ep.logged_in()
-        }
+    #[unsafe(no_mangle)]
+    pub extern "C" fn logged_in(&self) -> bool {
+        let mut ep = Edupage::new();
+        ep.login(&self.0.sub, &self.0.user, &self.0.pass).unwrap();
+        ep.logged_in()
+    }
 }
