@@ -40,7 +40,7 @@ fn main() {
             .with_crate(env!("CARGO_MANIFEST_DIR"))
             .with_documentation(true)
             .with_pragma_once(true)
-            .with_language(cbindgen::Language::Cxx)
+            .with_language(cbindgen::Language::C)
             .with_style(Style::Type)
             .generate()
             .expect("Unable to generate bindings")
