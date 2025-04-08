@@ -77,7 +77,7 @@ pub mod timeline_item_type {
             Err(_) => {
                 return Err(serde::de::Error::custom(
                     "Failed to deserialize TimelineItemType",
-                ))
+                ));
             }
         };
 

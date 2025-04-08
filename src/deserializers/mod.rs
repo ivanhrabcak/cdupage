@@ -49,7 +49,7 @@ pub mod string_i64_option {
 }
 
 pub mod string_i64_vec_option {
-    use serde::{ser::SerializeSeq, Deserialize, Deserializer, Serializer};
+    use serde::{Deserialize, Deserializer, Serializer, ser::SerializeSeq};
 
     pub fn serialize<S>(vec: &Option<Vec<i64>>, serializer: S) -> Result<S::Ok, S::Error>
     where
