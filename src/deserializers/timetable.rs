@@ -34,7 +34,7 @@ pub mod plan_item_type_option {
             _ => {
                 return Err(serde::de::Error::custom(format!(
                     "Unknown plan item type {value}"
-                )))
+                )));
             }
         })
     }
@@ -73,7 +73,7 @@ pub mod hh_mm_naivedatetime_option {
             None => {
                 return Err(serde::de::Error::custom(format!(
                     "Failed to deserialize hour from {value}"
-                )))
+                )));
             }
         };
 
@@ -82,7 +82,7 @@ pub mod hh_mm_naivedatetime_option {
             None => {
                 return Err(serde::de::Error::custom(format!(
                     "Failed to deserialize minute from {value}"
-                )))
+                )));
             }
         };
 
@@ -92,7 +92,7 @@ pub mod hh_mm_naivedatetime_option {
             None => {
                 return Err(serde::de::Error::custom(format!(
                     "Failed to create NaiveTime from {value}"
-                )))
+                )));
             }
         };
 

@@ -1,10 +1,10 @@
 #![doc = "If you don't know where to start, you can look at all the available methods in the [`edupage::Edupage`] struct documentation."]
 #![doc = include_str!("../README.md")]
 
+pub mod cdupage;
 pub(crate) mod deserializers;
-pub(crate) mod macro_aliases;
-
 pub mod edupage;
+pub(crate) mod macro_aliases;
 pub mod traits;
 pub mod types;
 
@@ -23,7 +23,7 @@ extern crate assert_matches;
 mod tests {
     use chrono::Utc;
 
-    use crate::traits::{Login, Timeline, Timetable, DBI};
+    use crate::traits::{DBI, Login, Timeline, Timetable};
 
     fn get_env_var(name: &'static str) -> Option<String> {
         use std::env;

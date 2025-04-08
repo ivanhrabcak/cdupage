@@ -1,6 +1,6 @@
 use chrono::{TimeZone, Utc};
 use node_bindgen::{
-    core::{val::JsObject, NjError, TryIntoJs},
+    core::{NjError, TryIntoJs, val::JsObject},
     derive::node_bindgen,
 };
 use num_enum::TryFromPrimitive;
@@ -9,7 +9,7 @@ use serde_json::Value;
 // use tslink::tslink;
 use crate::{
     edupage::{Edupage as IEdupage, EdupageError},
-    traits::{Login, Ringing, Timeline, Timetable, DBI},
+    traits::{DBI, Login, Ringing, Timeline, Timetable},
     types::{
         DBIBase, RingingTime, Student, Teacher, TimelineItem, TimelineItemType,
         Timetable as EduTimetable,
@@ -224,7 +224,7 @@ impl Edupage {
             Err(_) => {
                 return Err(SerdeIntoJs(EdupageError::ParseError(
                     "Invalid item type!".to_string(),
-                )))
+                )));
             }
         };
 
@@ -248,7 +248,7 @@ impl Edupage {
                     Err(_) => {
                         return Err(SerdeIntoJs(EdupageError::ParseError(
                             "Invalid item type!".to_string(),
-                        )))
+                        )));
                     }
                 },
             )

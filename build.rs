@@ -26,9 +26,24 @@ fn main() {
                 .filter(|f| f != "index")
                 .map(|f| format!("export * from \"./{}\"", f))
                 .collect();
-
             let mut file = File::create("./bindings/index.ts").unwrap();
             file.write_all(exports.join("\n").as_bytes()).unwrap();
         }
+    }
+    #[cfg(feature = "c_any_other_lang")]
+    {
+        use std::path::Path;
+
+        use cbindgen::Style;
+        let clang = cbindgen::Builder::new();
+        clang
+            .with_crate(env!("CARGO_MANIFEST_DIR"))
+            .with_documentation(true)
+            .with_pragma_once(true)
+            .with_language(cbindgen::Language::Cxx)
+            .with_style(Style::Type)
+            .generate()
+            .expect("Unable to generate bindings")
+            .write_to_file("bindings/bindings.h");
     }
 }
